@@ -18,6 +18,8 @@ use Controllers\direccionescontrolador;
 use Controllers\configcontrolador;
 use Controllers\paginacontrolador;
 
+use Controllers\configuracioncontroller;
+
 // me importa la clase router
 use MVC\Router;
 
@@ -56,6 +58,9 @@ $router->get('/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']
 
 /////area dashboard/////
 $router->get('/admin/dashboard', [dashboardcontrolador::class, 'index']);
+//// CONFIGURACION INICIAL ////
+$router->get('/admin/configuracion/company', [configuracioncontroller::class, 'company']);
+$router->post('/admin/configuracion/crearCompany', [configuracioncontroller::class, 'crearcompany']);
 
 
 $router->comprobarRutas();

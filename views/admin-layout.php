@@ -31,7 +31,7 @@
 <body class="antialiased bg-gray-50 dark:bg-gray-900">
     <?php include_once __DIR__."/templates/header.php"; ?>  <!-- barra superior -->
     <?php include_once __DIR__."/templates/sidebar.php"; ?> <!-- barra lateral -->
-    <main class="p-4 md:ml-64 h-auto pt-20">
+    <main class="p-4 md:ml-72 h-auto pt-24">
         <?php echo $contenido; ?>
     </main>
 
