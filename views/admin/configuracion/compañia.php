@@ -4,39 +4,34 @@
 
     <form class="max-w-md mx-auto">
     <div class="mb-5">
-        <label for="email" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Tipo Documento</label>
-        <select id="countries" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-            <option>Registro civil</option>
-            <option>Tarjeta de identidad</option>
-            <option>Cedula de ciudadania</option>
-            <option>Tarjeta de extranjeria</option>
-            <option>Cedula de extrangeria</option>
-            <option>NIT</option>
-            <option>Pasaporte</option>
-            <option>Documento de identificacion extranjero</option>
-            <option>NIT de otro pais</option>
-            <option>NUIP</option>
+        <label for="type_document_identification_id" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Tipo Documento</label>
+        <select id="type_document_identification_id" name="type_document_identification_id" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option value="1">Registro civil</option>
+            <option value="2">Tarjeta de identidad</option>
+            <option value="3">Cedula de ciudadania</option>
+            <option value="4">Tarjeta de extranjeria</option>
+            <option value="5">Cedula de extrangeria</option>
+            <option value="6">NIT</option>
+            <option value="7">Pasaporte</option>
+            <option value="8">Documento de identificacion extranjero</option>
+            <option value="9">NIT de otro pais</option>
+            <option value="10">NUIP</option>
         </select>
     </div>
     <div class="mb-5">
-        <label for="email" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Numero de Documento</label>
-        <input type="email" id="email" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="name@flowbite.com" required />
+        <label for="identification_number" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Numero de Documento</label>
+        <input type="number" id="identification_number" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="name@flowbite.com" required />
     </div>
     <div class="mb-5">
-        <label for="password" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Your password</label>
-        <input type="password" id="password" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+        <label for="password" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">ID Software</label>
+        <input type="number" id="password" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
     </div>
     <div class="mb-5">
-        <label for="repeat-password" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Repeat password</label>
+        <label for="repeat-password" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Pin Software</label>
         <input type="password" id="repeat-password" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
     </div>
-    <div class="flex items-start mb-5">
-        <div class="flex items-center h-5">
-            <input id="terms" type="checkbox" value="" class="w-4 h-4 border border-gray-300 rounded-sm bg-gray-50 focus:ring-3 focus:ring-blue-300" required />
-        </div>
-        <label for="terms" class="ms-2 text-base font-medium text-gray-900">I agree with the <a href="#" class="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a></label>
-    </div>
-    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-base px-5 py-2.5 text-center ">Register new account</button>
+    
+    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-base px-5 py-2.5 text-center ">Crear Compañia</button>
     </form>
 
 </div>

@@ -9,47 +9,6 @@ use MVC\Router;  //namespace\clase
  
 class logincontrolador{
 
-    public static function loginauth(Router $router){
-        $alertas = [];
-
-        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            //$_POST = ['email'=>'correo@correo.com', 'password'=>123456]
-            $auth = new usuarios($_POST);  //$auth es objeto de la clase usuarios de los datos que el usuario escribio
-            $alertas = $auth->validarLoginauth();  //valida que los campos esten escritos
-            if(empty($alertas)){
-
-                //$usuario = $auth->validar_registro();  //valida si email existe? retorna 1 o 0 
-                $usuario = $auth->find('email', $auth->email); //busca en la columna 'email' el correo electronico: $auth->email y retorna el registro de la bd en un objeto
-                if($usuario&&$usuario->habilitar){ //existe usuario o confirmado     //$usuario es objeto de la clase usuarios pero con los datos de la bd
-                    //$usuario->password = $auth->password
-                    $pass = $usuario->comprobar_password($auth->password);  //comprueba password y verifica si esta confirmado
-                    $confirmado = $usuario->confirmado;
-                    if($pass&&$confirmado){         //$auth->password = es lo que se escribe en el form
-                        //autenticar usuario         
-                        session_start();
-                        $_SESSION['id'] = $usuario->id;
-                        $_SESSION['nombre'] = $usuario->nombre." ".$usuario->apellido;
-                        $_SESSION['email'] = $usuario->email;
-                        $_SESSION['login'] = true;
-                        $_SESSION['admin'] = $usuario->admin ?? null;  //si no es admin la llave $_SESSION['admin'] = null
-
-                        //redireccion al dashboard del superior-admin-empleado o cliente
-                        if($usuario->admin>=1){
-                            header('Location: /admin/dashboard');
-                        }else{
-                            header('Location: /Cliente/app');
-                        }
-
-                    }else{ $alertas = usuarios::setAlerta('error', 'Password incorrecto o cliente no confirmado, verfica tu email');  }
-                }else{
-                    $alertas = usuarios::setAlerta('error', 'usuario no encontrado o no existe');
-                }
-            } 
-        }
-        $alertas = usuarios::getAlertas();
-    $router->render('auth/loginauth', ['alertas'=>$alertas, 'titulo'=>'iniciar sesión', /*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
-    }
-
     public static function login(Router $router){
         $alertas = [];
 
