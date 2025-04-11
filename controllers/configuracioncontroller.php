@@ -7,6 +7,7 @@ namespace Controllers;
 //require __DIR__ . '/../classes/aws/aws-autoloader.php';
 use MVC\Router;
 use Model\usuarios;
+use Model\departments;
 
 
 class configuracioncontroller{
@@ -17,9 +18,13 @@ class configuracioncontroller{
         isadmin();
         date_default_timezone_set('America/Bogota');
         
+        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
 
+        }
+
+        $departments = departments::all();
         
-        $router->render('admin/configuracion/compañia', ['titulo'=>'Inicio', 'user'=>$_SESSION]);
+        $router->render('admin/configuracion/compañia', ['titulo'=>'config inicial', 'departments'=>$departments, 'user'=>$_SESSION]);
     }
 
     public static function perfil(Router $router) {
