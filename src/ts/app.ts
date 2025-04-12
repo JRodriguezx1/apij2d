@@ -1,34 +1,10 @@
-const mobilemenu = document.querySelector('#mobile-menu');  //seleccion por id
-const sidebar = document.querySelector('.sidebar') as HTMLElement|null;  //seleccion por calses
-const btnmenux = document.querySelector('#mobile-menux');
+
 const barra = document.querySelector('.barra-mobile') as HTMLElement|null;
 const nametop:HTMLElement|null = document.querySelector('.nametop');
 declare let Chart:any; //declare le indica a typescript que la variable chart viene de manera externa
 declare const Swal: any;
 declare var moment: any;
 
-if(mobilemenu){
-    mobilemenu.addEventListener('click', function(){
-      if (sidebar && barra) {
-        sidebar.classList.toggle('mostrar');
-        barra.classList.toggle('ocultarmenu');
-      }
-    });
-}
-if(btnmenux){
-    btnmenux.addEventListener('click', function(){
-      if (sidebar && barra) {
-        sidebar.classList.toggle('mostrar');
-        barra.classList.toggle('ocultarmenu');
-      }
-    });
-}
-/////////////////////// animacion del sidebar toggle ///////////////////////////
-document.querySelector('.sidebartoggle')!.addEventListener('click', (e)=>{
-  if(sidebar)sidebar?.classList.toggle('minsidebar');
-  if(nametop)nametop.classList.toggle('noneElement');
-  $('.btnav').toggleClass('noneElement');
-});
 
 //------------------------------------------------------------------------------------------------------------------//
 ///////////////////// OBJETO DE CONFIGURACION DEL PLUGIN DATATABLES /////////////////////

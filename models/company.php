@@ -2,8 +2,8 @@
 
 namespace Model;
 
-class categorias extends ActiveRecord {
-    protected static $tabla = 'categorias';
+class company extends ActiveRecord {
+    protected static $tabla = 'company';
     protected static $columnasDB = ['id', 'nombre', 'codigo', 'totalproductos', 'foto', 'fechacreacion'];
     
     public function __construct($args = [])
@@ -16,7 +16,7 @@ class categorias extends ActiveRecord {
         $this->fechacreacion = $args['fechacreacion'] ?? date('Y-m-d');
     }
 
-    // Validación para categorias nuevas
+    // Validación para company nuevas
     public function validar_nueva_categoria() {
         if(!$this->nombre)self::$alertas['error'][] = 'El Nombre de la categoria es Obligatorio';
         

@@ -1,79 +1,62 @@
 (()=>{
-    if(document.querySelector('.clientes')){
+    if(document.querySelector('.configcompañia')){
       
       //const miDialogoUpDireccion = document.querySelector('#miDialogoUpDireccion') as any;
-      const selectdirecciones = document.querySelector('#selectdirecciones') as HTMLSelectElement;
+      const selectDepartments = document.querySelector('#departamento') as HTMLSelectElement;
+      const selectdCities = document.querySelector('#Ciudad') as HTMLSelectElement;
       //const btnCerrarUpDireccion = document.querySelector('#btnCerrarUpDireccion') as HTMLButtonElement;
       let indiceFila=0, control=0, tablaClientes:HTMLElement;
       
-      type direccionesapi = {
+      type municipalities = {
         id:string,
-        idcliente:string,
-        idtarifa:string,
-        tarifa:{id:string, idcliente:string, nombre:string, valor:string},
-        direccion:string,
-        ciudad:string,
-        departamento:string
+        department_id:string,
+        name:string,
+        code:string,
       };
-      let direcciones:direccionesapi[]=[];
+      let cities:municipalities[]=[];
 
+      selectDepartments.addEventListener('change', (e:Event)=>{
+        const x:HTMLOptionElement = (e.target as HTMLOptionElement);
+        imprimirCiudades(x.value);
+      });
   
 
-      function upRemoveDir(e:Event){ //actualizar o eliminar direccion
-        let idcliente = (e.target as HTMLElement).parentElement!.id, info = (tablaClientes as any).page.info();
-        if((e.target as HTMLElement).tagName === 'I')idcliente = (e.target as HTMLElement).parentElement!.parentElement!.id;
+      function imprimirCiudades(x:string){ //actualizar o eliminar direccion
         (async ()=>{
           try {
-            const url = "/admin/api/direccionesXcliente?id="+idcliente; //llamado a la API REST y se trae las direcciones segun cliente elegido
+            const url = "/admin/api/citiesXdepartments?id="+x; //llamado a la API REST y se trae las cities segun cliente elegido
             const respuesta = await fetch(url); 
             const resultado = await respuesta.json(); 
-            direcciones = resultado;
-            addDireccionSelect(resultado);
+            if(resultado.error){
+              console.log(110)
+            }else{
+              cities = resultado;
+              addCitiesToSelect(cities);
+            }
           } catch (error) {
               console.log(error);
           }
         })();
-        miDialogoUpDireccion.showModal();
-        document.addEventListener("click", cerrarDialogoExterno);
       }
 
 
-       ////// añade direccion al select de direcciones al miDialogoUpDireccion, cuando se desea actualizar o eliminar la direccion de un cliente
-      function addDireccionSelect<T extends {id:string, idcliente:string, idtarifa:string, tarifa:{id:string, idcliente:string, nombre:string, valor:string}, direccion:string, ciudad:string, departamento:string}>(addrs: T[]):void{
-        while(selectdirecciones?.firstChild)selectdirecciones.removeChild(selectdirecciones?.firstChild);
-        addrs.forEach(dir =>{
+       ////// añade direccion al select de cities al miDialogoUpDireccion, cuando se desea actualizar o eliminar la direccion de un cliente
+      function addCitiesToSelect<T extends {id:string, department_id:string, name:string, code:string}>(addrs: T[]):void{
+        while(selectdCities?.firstChild)selectdCities.removeChild(selectdCities?.firstChild);
+        addrs.forEach(x =>{
           const option = document.createElement('option');
-          option.textContent = dir.direccion;
-          option.value = dir.id;
-          option.dataset.idcliente = dir.idcliente;
-          option.dataset.idtarifa = dir.idtarifa;
-          selectdirecciones.appendChild(option);
-        });
-        $('#uptarifa').val(addrs[0].idtarifa);
-        (document.querySelector('#updepartamento') as HTMLInputElement).value = addrs[0].departamento;
-        (document.querySelector('#upciudad') as HTMLInputElement).value = addrs[0].ciudad;
-        (document.querySelector('#updireccion') as HTMLInputElement).value = addrs[0].direccion;
-      }
-
-
-      ///////// Evento al select de direcciones en el modal actualizar direciones de cada cliente ////////////
-      selectdirecciones?.addEventListener('change', (e)=>{
-        const select = (e.target as HTMLSelectElement);
-        const idDir:string = select.options[select.selectedIndex].value;
-        const objDireccion = direcciones.find(x=>x.id == idDir)!;
-        $('#uptarifa').val(objDireccion?.idtarifa??1);
-        (document.querySelector('#updepartamento') as HTMLInputElement).value = objDireccion.departamento;
-        (document.querySelector('#upciudad') as HTMLInputElement).value = objDireccion.ciudad;
-        (document.querySelector('#updireccion') as HTMLInputElement).value = objDireccion.direccion;
-      });
-
-
-      document.querySelector('#formUpDireccion')?.addEventListener('submit', e=>{
-          e.preventDefault();
-          // verificar si se oprimio el btn eliminar o actualizar del modal actualizar direccion
+          option.textContent = x.name;
+          option.value = x.id;
+          option.dataset.code = x.code;
+          option.dataset.department_id = x.department_id;
+          selectdCities.appendChild(option);
         });
         
+      }
 
+
+      
+      /*
       function eliminarClientes(e:Event){
         let idcliente = (e.target as HTMLElement).parentElement!.id, info = (tablaClientes as any).page.info();
         if((e.target as HTMLElement).tagName === 'I')idcliente = (e.target as HTMLElement).parentElement!.parentElement!.id;
@@ -108,23 +91,8 @@
                 })();//cierre de async()
             }
         });
-      }
+      }*/
 
-
-      btnCerrarUpDireccion.addEventListener('click', ()=>miDialogoUpDireccion.close());
-  
-  
-      function limpiarformdialog(){
-        (document.querySelector('#formCrearUpdateCliente') as HTMLFormElement)?.reset();
-      }
-      function cerrarDialogoExterno(event:Event) {
-        if (event.target === miDialogoCliente || event.target === miDialogoCrearDireccion || event.target === miDialogoUpDireccion || (event.target as HTMLInputElement).value === 'salir') {
-          miDialogoCliente.close();
-          miDialogoCrearDireccion.close();
-          miDialogoUpDireccion.close();
-          document.removeEventListener("click", cerrarDialogoExterno);
-        }
-      }
     }
   
   })();

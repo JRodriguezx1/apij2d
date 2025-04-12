@@ -8,6 +8,7 @@ namespace Controllers;
 use MVC\Router;
 use Model\usuarios;
 use Model\departments;
+use Model\municipalities;
 
 
 class configuracioncontroller{
@@ -77,6 +78,20 @@ class configuracioncontroller{
         session_start();
         isadmin();
         $router->render('admin/viewmobile/index', ['titulo'=>'mas...', 'user'=>$_SESSION, 'alertas'=>$alertas]);
+    }
+
+
+    ///////////////////////////////////  Apis ////////////////////////////////////
+    public static function citiesXdepartments(){  //api llamado desde ventas.js me trae todas las direcciones segun cliente elegido
+        $id = $_GET['id'];
+        $alertas = [];
+        if(!is_numeric($id)){
+            $alertas['error'][] = "Hubo un error el id del departamento no es valido";
+            echo json_encode($alertas);
+            return;
+        }
+        $municipios = municipalities::idregistros('department_id', $id);
+        echo json_encode($municipios);
     }
 
     

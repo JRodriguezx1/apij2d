@@ -63,4 +63,8 @@ $router->get('/admin/configuracion/company', [configuracioncontroller::class, 'c
 $router->post('/admin/configuracion/crearCompany', [configuracioncontroller::class, 'crearcompany']);
 
 
+//////////////////////*********  API  **********//////////////////
+$router->get('/admin/api/citiesXdepartments', [configuracioncontroller::class, 'citiesXdepartments']);
+
+
 $router->comprobarRutas();
