@@ -5,7 +5,7 @@
       const selectDepartments = document.querySelector('#departamento') as HTMLSelectElement;
       const selectdCities = document.querySelector('#Ciudad') as HTMLSelectElement;
       //const btnCerrarUpDireccion = document.querySelector('#btnCerrarUpDireccion') as HTMLButtonElement;
-      let indiceFila=0, control=0, tablaClientes:HTMLElement;
+      let indiceFila=0, control=0, tablaCompany:HTMLTableElement;
       
       type municipalities = {
         id:string,
@@ -14,6 +14,7 @@
         code:string,
       };
       let cities:municipalities[]=[];
+
 
       selectDepartments.addEventListener('change', (e:Event)=>{
         const x:HTMLOptionElement = (e.target as HTMLOptionElement);
@@ -28,7 +29,7 @@
             const respuesta = await fetch(url); 
             const resultado = await respuesta.json(); 
             if(resultado.error){
-              console.log(110)
+              Swal.fire(resultado.error[0], '', 'error')
             }else{
               cities = resultado;
               addCitiesToSelect(cities);
@@ -55,17 +56,25 @@
       }
 
 
+      document.querySelector('#tablaCompany')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
+        const target = e.target as HTMLElement;
+        if(target?.classList.contains("eliminarCompany")||target.parentElement?.classList.contains("eliminarCompany"))eliminarCompany(e);
+      });
       
-      /*
-      function eliminarClientes(e:Event){
-        let idcliente = (e.target as HTMLElement).parentElement!.id, info = (tablaClientes as any).page.info();
-        if((e.target as HTMLElement).tagName === 'I')idcliente = (e.target as HTMLElement).parentElement!.parentElement!.id;
-        indiceFila = (tablaClientes as any).row((e.target as HTMLElement).closest('tr')).index();
+      
+      function eliminarCompany(e:Event){
+        let idCompany = (e.target as HTMLElement).parentElement!.id; //info = (tablaClientes as any).page.info();
+        var tr = (e.target as HTMLElement).parentElement?.parentElement?.parentElement;
+        if((e.target as HTMLElement).tagName === 'I'){
+          idCompany = (e.target as HTMLElement).parentElement!.parentElement!.id;
+          tr = (e.target as HTMLElement).parentElement?.parentElement?.parentElement?.parentElement;
+        }
+        //indiceFila = (tablaClientes as any).row((e.target as HTMLElement).closest('tr')).index();
         Swal.fire({
             customClass: {confirmButton: 'sweetbtnconfirm', cancelButton: 'sweetbtncancel'},
             icon: 'question',
-            title: 'Desea eliminar el cliente?',
-            text: "El cliente sera eliminado por completo.",
+            title: 'Desea eliminar la empresa?',
+            text: "Se eliminara la empresa por completo.",
             showCancelButton: true,
             confirmButtonText: 'Si',
             cancelButtonText: 'No',
@@ -73,14 +82,15 @@
             if (result.isConfirmed) {
                 (async ()=>{ 
                     const datos = new FormData();
-                    datos.append('id', idcliente);
+                    datos.append('id', idCompany);
                     try {
-                        const url = "/admin/api/eliminarCliente";
+                        const url = "/admin/api/eliminarCompany";
                         const respuesta = await fetch(url, {method: 'POST', body: datos}); 
                         const resultado = await respuesta.json();  
                         if(resultado.exito !== undefined){
-                          (tablaClientes as any).row(indiceFila+info.start).remove().draw(); 
-                          (tablaClientes as any).page(info.page).draw('page');
+                          //(tablaClientes as any).row(indiceFila+info.start).remove().draw(); 
+                          //(tablaClientes as any).page(info.page).draw('page');
+                          tr?.remove();
                           Swal.fire(resultado.exito[0], '', 'success') 
                         }else{
                             Swal.fire(resultado.error[0], '', 'error')
@@ -91,7 +101,7 @@
                 })();//cierre de async()
             }
         });
-      }*/
+      }
 
     }
   

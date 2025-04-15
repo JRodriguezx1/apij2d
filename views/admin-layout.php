@@ -52,7 +52,7 @@
     
     <!--<script src="/build/js/bundle.min.js" defer></script>-->
     <script src="/build/js/bundle.ts.min.js" defer></script>
-    <!--<script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 
 
 </body>

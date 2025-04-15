@@ -60,11 +60,11 @@ $router->get('/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']
 $router->get('/admin/dashboard', [dashboardcontrolador::class, 'index']);
 //// CONFIGURACION INICIAL ////
 $router->get('/admin/configuracion/company', [configuracioncontroller::class, 'company']);
-$router->post('/admin/configuracion/crearCompany', [configuracioncontroller::class, 'crearcompany']);
+$router->post('/admin/configuracion/company', [configuracioncontroller::class, 'company']);
 
 
 //////////////////////*********  API  **********//////////////////
 $router->get('/admin/api/citiesXdepartments', [configuracioncontroller::class, 'citiesXdepartments']);
-
+$router->post('/admin/api/eliminarCompany', [configuracioncontroller::class, 'eliminarCompany']);
 
 $router->comprobarRutas();
