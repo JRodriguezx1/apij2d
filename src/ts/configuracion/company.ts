@@ -56,6 +56,7 @@
       }
 
 
+      /////////////////////  Tabla de las compañias creadas ///////////////////////
       document.querySelector('#tablaCompany')?.addEventListener("click", (e)=>{ //evento click sobre toda la tabla
         const target = e.target as HTMLElement;
         if(target?.classList.contains("eliminarCompany")||target.parentElement?.classList.contains("eliminarCompany"))eliminarCompany(e);
@@ -80,13 +81,11 @@
             cancelButtonText: 'No',
         }).then((result:any) => {
             if (result.isConfirmed) {
-                (async ()=>{ 
-                    const datos = new FormData();
-                    datos.append('id', idCompany);
+                (async ()=>{
                     try {
-                        const url = "/admin/api/eliminarCompany";
-                        const respuesta = await fetch(url, {method: 'POST', body: datos}); 
-                        const resultado = await respuesta.json();  
+                        const url = "/admin/api/eliminarCompany?id="+idCompany; //llamado a la API REST y se trae las direcciones segun cliente elegido
+                        const respuesta = await fetch(url); 
+                        const resultado = await respuesta.json();
                         if(resultado.exito !== undefined){
                           //(tablaClientes as any).row(indiceFila+info.start).remove().draw(); 
                           //(tablaClientes as any).page(info.page).draw('page');

@@ -82,57 +82,20 @@ class configuracioncontroller{
 
 
 
-    public static function perfil(Router $router) {
+    public static function software(Router $router) {
         $alertas = [];
         session_start();
         isadmin();
         if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $usuario = usuarios::find('id', $_SESSION['id']);
-            $usuario->compara_objetobd_post($_POST);
-            $alertas = $usuario->validarEmail();
-            if(empty($alertas)){
-                $r = $usuario->actualizar();
-                if($r){
-                    $alertas['exito'][] = "Datos actualizados";
-                }else{ $alertas['error'][] = "Hubo un error"; }
-            }
+            //eliminar el software anterior
+            //creacion del nuevo software
+            //
+            
         }
         $usuario = usuarios::find('id', $_SESSION['id']);
         $router->render('admin/dashboard/perfil', ['titulo'=>'Perfil', 'usuario'=>$usuario, 'user'=>$_SESSION, 'alertas'=>$alertas]);
     }
 
-    public static function cambiarpassword(Router $router){
-        $alertas = [];
-        session_start();
-        isadmin();
-        if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-            $usuario = usuarios::find('id', $_SESSION['id']);
-            $x = $usuario->comprobar_password($_POST['passwordactual']);
-            if($x){
-                $usuario->compara_objetobd_post($_POST);
-                $alertas = $usuario->validarPassword();
-                if(empty($alertas)){
-                    if($usuario->password == $usuario->password2){
-                        $usuario->hashPassword();
-                        $a = $usuario->actualizar();
-                        $alertas['exito'][] = "Password Actualizado";
-                    }else{
-                        $alertas['error'][] = "El password nuevo no coincide cuando se repite";
-                    }
-                }
-            }else{
-                $alertas['error'][] = "Password actual no es correcto";
-            }
-        }
-        $router->render('admin/dashboard/cambiarpassword', ['titulo'=>'Cambio de password', 'user'=>$_SESSION, 'alertas'=>$alertas]);
-    }
-
-    public static function viewmobile(Router $router){
-        $alertas = [];
-        session_start();
-        isadmin();
-        $router->render('admin/viewmobile/index', ['titulo'=>'mas...', 'user'=>$_SESSION, 'alertas'=>$alertas]);
-    }
 
 
     ///////////////////////////////////  Apis ////////////////////////////////////
@@ -153,12 +116,22 @@ class configuracioncontroller{
         $id = $_GET['id'];
         $alertas = [];
         if(!is_numeric($id)){
-            $alertas['error'][] = "Hubo un error el id del departamento no es valido";
+            $alertas['error'][] = "Hubo un error al eliminar la compañia";
             echo json_encode($alertas);
             return;
         }
-        $municipios = municipalities::idregistros('department_id', $id);
-        echo json_encode($municipios);
+        $company = companies::find('id', $id);
+        if($company){
+            $r = $company->eliminar_registro();
+            if($r){
+                $alertas['exito'][] = "Compañia eliminada correctamente";
+            }else{
+                $alertas['error'][] = "Error al eliminar la compañia de la base de datos";
+            }
+        }else{
+            $alertas['error'][] = "Error al eliminar la compañia no fue encontrada";
+        }
+        echo json_encode($alertas);
     }
 
     

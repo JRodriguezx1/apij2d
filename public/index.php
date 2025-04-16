@@ -59,12 +59,12 @@ $router->get('/printfacturacarta', [cajacontrolador::class, 'printfacturacarta']
 /////area dashboard/////
 $router->get('/admin/dashboard', [dashboardcontrolador::class, 'index']);
 //// CONFIGURACION INICIAL ////
-$router->get('/admin/configuracion/company', [configuracioncontroller::class, 'company']);
-$router->post('/admin/configuracion/company', [configuracioncontroller::class, 'company']);
+$router->get('/admin/configuracion/company', [configuracioncontroller::class, 'company']);  // Mostrar el formulario y compañia
+$router->post('/admin/configuracion/company', [configuracioncontroller::class, 'company']); // POS para crear compañia
 
 
 //////////////////////*********  API  **********//////////////////
-$router->get('/admin/api/citiesXdepartments', [configuracioncontroller::class, 'citiesXdepartments']);
-$router->post('/admin/api/eliminarCompany', [configuracioncontroller::class, 'eliminarCompany']);
+$router->get('/admin/api/citiesXdepartments', [configuracioncontroller::class, 'citiesXdepartments']);  //Consulta municipios segun departamento
+$router->get('/admin/api/eliminarCompany', [configuracioncontroller::class, 'eliminarCompany']);  //Elimina compañia
 
 $router->comprobarRutas();
