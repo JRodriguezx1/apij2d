@@ -24,8 +24,12 @@
                 <input type="number" id="numero_documento" name="numero_documento" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Sin digito verificador" required />
             </div>
             <div class="mb-5 col-span-3">
-                <label for="certificadoDigital" class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">Certificado Digital</label>
+                <label for="certificadoDigital" class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">Certificado Digital .p12</label>
                 <input type="file" id="certificadoDigital" name="certificadoDigital" accept=".p12" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+            </div>
+            <div class="mb-5 col-span-3">
+                <label for="password" class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">Password</label>
+                <input type="text" id="password" name="password" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
             </div>
             <div class="mb-5 col-span-3">
                 <label for="idsoftware" class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">ID Software</label>
@@ -125,7 +129,10 @@
               <td class=""><?php echo $value->identification_number.'-'.$value->dv;?></td>
               <td class="" ><?php echo $value->id;?></td>
               <td class="" ><?php echo $value->objuser->id;?></td>
-              <td class="" ><p><?php echo $value->objuser->api_token;?></p></td>
+              <td class="" >
+                <p></p>
+                <p><?php echo $value->objuser->api_token;?></p>
+            </td>
               <td class="accionestd"><div class="acciones-btns" id="<?php echo $value->id;?>"><button class="btn-md btn-red eliminarCompany"><i class="fa-solid fa-trash-can"></i></button></div></td>
           </tr>
           <?php endforeach; ?>

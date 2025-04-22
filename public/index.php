@@ -8,7 +8,7 @@ require_once __DIR__ . '/../includes/app.php'; //apunta al directorio raiz y lue
 
 use Controllers\logincontrolador; //clase para logueo, registro de usuario, recuperacion, deslogueo etc..
 use Controllers\dashboardcontrolador;
-use Controllers\contabilidadcontrolador;
+use Controllers\facturacontroller;
 use Controllers\almacencontrolador;
 use Controllers\cajacontrolador;
 use Controllers\ventascontrolador;
@@ -61,7 +61,7 @@ $router->get('/admin/dashboard', [dashboardcontrolador::class, 'index']);
 //// CONFIGURACION INICIAL ////
 $router->get('/admin/configuracion/company', [configuracioncontroller::class, 'company']);  // Mostrar el formulario y compañia
 $router->post('/admin/configuracion/company', [configuracioncontroller::class, 'company']); // POS para crear compañia
-
+$router->get('/admin/factura/setdepruebas', [facturacontroller::class, 'setdepruebas']);  // Mostrar el set de pruebas
 
 //////////////////////*********  API  **********//////////////////
 $router->get('/admin/api/citiesXdepartments', [configuracioncontroller::class, 'citiesXdepartments']);  //Consulta municipios segun departamento

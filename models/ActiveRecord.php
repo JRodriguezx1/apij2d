@@ -77,9 +77,15 @@ class ActiveRecord {
         $sql .= $string2;
         $sql .= "');";
         $sql = str_replace("''", 'NULL', $sql);
-        $resultado = self::$db->query($sql);
-        return [$resultado, self::$db->insert_id];  //insert_id retorna el ultimo registro insertado en la bd
-           //  [true/false, id=1,2,3...00] = [0,1] 
+        try {
+            $resultado = self::$db->query($sql);
+            return [$resultado, self::$db->insert_id];  //insert_id retorna el ultimo registro insertado en la bd
+            //  [true/false, id=1,2,3...00] = [0,1] 
+        } catch (\mysqli_sql_exception $e) {
+            //throw new Exception("Error al guardar: " . $e->getMessage());
+            echo "Otro error: " . $e->getMessage();
+            return [false];
+        }
     }
 
 
