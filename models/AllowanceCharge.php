@@ -2,28 +2,64 @@
 
 namespace Model;
 
-class declaracionesdineros extends ActiveRecord{
-    protected static $tabla = 'declaracionesdineros';
-    protected static $columnasDB = ['id', 'id_mediopago', 'idcierrecajaid', 'nombremediopago', 'valordeclarado', 'valorsistema'];
+class AllowanceCharge extends ActiveRecord{
+    protected static $tabla = 'AllowanceCharge';
+    protected static $columnasDB = ['discount_id', 'charge_indicator', 'allowance_charge_reason', 'multiplier_factor_numeric', 'amount', 'base_amount'];
+
+    public $discount_id;
+    public $charge_indicator;
+    public $allowance_charge_reason;
+    public $multiplier_factor_numeric;
+    public $amount;
+    public $base_amount;
     
     public function __construct($args = []){
-        $this->id = $args['id']??null;
-        $this->id_mediopago = $args['id_mediopago']??'';
-        $this->idcierrecajaid = $args['idcierrecajaid']??'';
-        $this->nombremediopago = $args['nombremediopago']??'';
-        $this->valordeclarado = $args['valordeclarado']??'0';
-        $this->valorsistema = $args['valor']??0;
+        $this->discount_id = $args['discount_id']??null;
+        $this->charge_indicator = $args['charge_indicator']?? false;
+        $this->allowance_charge_reason = $args['allowance_charge_reason']?? null;
+        $this->multiplier_factor_numeric = $args['multiplier_factor_numeric']?? null;
+        $this->amount = $args['amount']?? 0;
+        $this->base_amount = $args['base_amount ']?? 1;
     }
 
-
-    public function validar():array
+    /**
+     * Devuelve el indicador de cargo como texto "true"/"false"
+     */
+    public function getChargeIndicator():bool
     {
-        if(!$this->id_mediopago)self::$alertas['error'][] = "Error al declarar el medio de pago";
-        if(!$this->idcierrecajaid)self::$alertas['error'][] = "Error con el id cierre de caja";
-        if(!$this->nombremediopago)self::$alertas['error'][] = "Error con el nombre del medio de pago declarado";
-        if(!is_numeric($this->valordeclarado))self::$alertas['error'][] = "Valor declardo no especificado";
-        return self::$alertas;
+        return $this->charge_indicator ? 'true' : 'false';
     }
+
+    /**
+     * Devuelve el multiplicador en formato 2 decimales, ya sea directo o calculado
+     */
+    public function getMultiplierFactorNumeric()
+    {
+        if ($this->multiplier_factor_numeric !== null) 
+            return number_format($this->multiplier_factor_numeric, 2, '.', '');
+        
+        if ($this->base_amount == 0) 
+            return '0.00';
+        
+        return number_format(($this->amount / $this->base_amount) * 100, 2, '.', '');
+        
+    }
+
+    /**
+     * Devuelve todos los datos como un array (como toArray de Laravel)
+     */
+    public function toArray()
+    {
+        return [
+            'discount_id' => $this->discount_id,
+            'charge_indicator' => $this->getChargeIndicator(),
+            'allowance_charge_reason' => $this->allowance_charge_reason,
+            'multiplier_factor_numeric' => $this->getMultiplierFactorNumeric(),
+            'amount' => $this->amount,
+            'base_amount' => $this->base_amount,
+        ];
+    }
+
 }
 
 ?>

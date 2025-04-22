@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Classes\Email;
+use Model\AllowanceCharge;
 use Model\usuarios;
 use Model\users;
 use Model\companies;
@@ -52,6 +53,7 @@ class facturacontroller{
         array_push($cargosDescuentos, new AllowanceCharge($cargoDescuento));
       }
       //impuestos
+      
       //totales monetarios
       //lineas de factura (registro de los productos o servicios facturados)
       //crear el xml
