@@ -10,6 +10,7 @@ use Model\companies;
 use Model\resolutions;
 use Model\payment_forms;
 use Model\payment_methods;
+use Model\TaxTotal;
 use Model\type_documents;
 use MVC\Router;  //namespace\clase
  
@@ -53,11 +54,12 @@ class facturacontroller{
         array_push($cargosDescuentos, new AllowanceCharge($cargoDescuento));
       }
       //impuestos
-      $taxTotals = collect();
-      foreach ($request->tax_totals ?? [] as $taxTotal) {
-          $taxTotals->push(new TaxTotal($taxTotal));
+      $taxTotals = [];
+      foreach ($_POST['taxTotals'] ?? [] as $taxTotal) {
+          array_push($taxTotals, new TaxTotal($taxTotal));
       }
       //totales monetarios
+      
       //lineas de factura (registro de los productos o servicios facturados)
       //crear el xml
       //firmar XML digitalmente

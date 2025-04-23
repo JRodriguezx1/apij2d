@@ -12,6 +12,8 @@ class AllowanceCharge extends ActiveRecord{
     public $multiplier_factor_numeric;
     public $amount;
     public $base_amount;
+
+    public $discount;
     
     public function __construct($args = []){
         $this->discount_id = $args['discount_id']??null;
@@ -43,6 +45,16 @@ class AllowanceCharge extends ActiveRecord{
         
         return number_format(($this->amount / $this->base_amount) * 100, 2, '.', '');
         
+    }
+
+    /**
+     * Simula la relación con un modelo Discount (debes implementar esto tú mismo)
+     */
+    public function loadDiscount()
+    {
+        // Aquí debes implementar la lógica para traer el descuento desde base de datos
+        // Ejemplo simulado:
+        //$this->discount = Discount::find($this->discount_id);
     }
 
     /**

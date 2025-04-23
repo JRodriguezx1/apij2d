@@ -2,9 +2,9 @@
 
 namespace Model;
 
-class caja extends ActiveRecord{
-    protected static $tabla = 'caja';
-    protected static $columnasDB = ['id', 'idtipoconsecutivo', 'nombre'];
+class TaxTotal extends ActiveRecord{
+    //protected static $tabla = 'TaxTotal';
+    //protected static $columnasDB = ['id', 'idtipoconsecutivo', 'nombre'];
     
     public $tax_id;
     public $unit_measure_id;
@@ -23,6 +23,7 @@ class caja extends ActiveRecord{
         $this->base_unit_measure = $args['base_unit_measure']??'';
         $this->per_unit_amount = $args['per_unit_amount']??'';
     }
+
 
     public function getIsFixedValue()
     {
