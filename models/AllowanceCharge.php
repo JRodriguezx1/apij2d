@@ -3,8 +3,8 @@
 namespace Model;
 
 class AllowanceCharge extends ActiveRecord{
-    protected static $tabla = 'AllowanceCharge';
-    protected static $columnasDB = ['discount_id', 'charge_indicator', 'allowance_charge_reason', 'multiplier_factor_numeric', 'amount', 'base_amount'];
+    //protected static $tabla = 'AllowanceCharge';
+    //protected static $columnasDB = ['discount_id', 'charge_indicator', 'allowance_charge_reason', 'multiplier_factor_numeric', 'amount', 'base_amount'];
 
     public $discount_id;
     public $charge_indicator;
@@ -36,9 +36,9 @@ class AllowanceCharge extends ActiveRecord{
     public function getMultiplierFactorNumeric()
     {
         if ($this->multiplier_factor_numeric !== null) 
-            return number_format($this->multiplier_factor_numeric, 2, '.', '');
+            return number_format($this->multiplier_factor_numeric, 2, '.', ''); //formato de 2 decimales y punto decimal
         
-        if ($this->base_amount == 0) 
+        if ($this->base_amount == 0)
             return '0.00';
         
         return number_format(($this->amount / $this->base_amount) * 100, 2, '.', '');

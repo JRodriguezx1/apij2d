@@ -53,7 +53,10 @@ class facturacontroller{
         array_push($cargosDescuentos, new AllowanceCharge($cargoDescuento));
       }
       //impuestos
-      
+      $taxTotals = collect();
+      foreach ($request->tax_totals ?? [] as $taxTotal) {
+          $taxTotals->push(new TaxTotal($taxTotal));
+      }
       //totales monetarios
       //lineas de factura (registro de los productos o servicios facturados)
       //crear el xml
