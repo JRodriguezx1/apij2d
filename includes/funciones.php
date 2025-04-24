@@ -1,5 +1,7 @@
 <?php
 
+use DOMDocument;
+
 function debuguear($variable) : string {
     echo "<pre>";
     var_dump($variable);
@@ -58,5 +60,23 @@ function digitoVerificacionDIAN($nit) {
                 return $resta;
     } else {
         return FALSE;
+    }
+}
+
+
+function createXML(array $data)
+{
+    try {
+        $templatePath = __DIR__ . "/../views/templates/xml/{$data['typeDocument']['code']}.xml";
+        $DOMDocumentXML = new DOMDocument();
+        $DOMDocumentXML->preserveWhiteSpace = false;
+        $DOMDocumentXML->formatOutput = true;
+        $DOMDocumentXML->loadXML(view("xml.{$data['typeDocument']['code']}", $data)->render());
+
+        return $DOMDocumentXML;
+    } catch (InvalidArgumentException $e) {
+        throw new Exception("The API does not support the type of document '{$data['typeDocument']['name']}' Error: {$e->getMessage()}");
+    } catch (Exception $e) {
+        throw new Exception("Error: {$e->getMessage()}");
     }
 }

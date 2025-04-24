@@ -7,6 +7,8 @@ use Model\AllowanceCharge;
 use Model\usuarios;
 use Model\users;
 use Model\companies;
+use Model\InvoiceLine;
+use Model\LegalMonetaryTotal;
 use Model\resolutions;
 use Model\payment_forms;
 use Model\payment_methods;
@@ -60,10 +62,14 @@ class facturacontroller{
           array_push($taxTotals, new TaxTotal($taxTotal));
       }
       //totales monetarios
-      
+      $legalMonetaryTotals = new LegalMonetaryTotal($_POS['legal_monetary_totals']);
       //lineas de factura (registro de los productos o servicios facturados)
-
+      $invoiceLines = [];
+      foreach ($_POST['invoiceLines'] ?? [] as $invoiceLine) {
+          array_push($invoiceLines, new InvoiceLine($invoiceLine));
+      }
       //crear el xml
+      $invoice = createXML(compact('user', 'company', 'customer', 'taxTotals', 'resolution', 'paymentForm', 'typeDocument', 'invoiceLines', 'allowanceCharges', 'legalMonetaryTotals', 'date', 'time'));
       //firmar XML digitalmente
       //preparar y enviar a Dian pruebas
       //respuesta
