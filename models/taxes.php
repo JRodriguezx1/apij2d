@@ -11,7 +11,7 @@ class taxes extends ActiveRecord {
     {
         $this->id = $args['id'] ?? null;
         $this->name = $args['name'] ?? '';
-        $this->description = $args['description'] ?? null;
+        $this->description = $args['description'] ?? '';
         $this->code = $args['code'] ?? '';
         $this->created_at = $args['created_at'] ?? date("Y-m-d H:i:s");
         $this->updated_at = $args['updated_at'] ?? '';

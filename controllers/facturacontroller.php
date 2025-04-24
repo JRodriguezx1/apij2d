@@ -13,6 +13,7 @@ use Model\payment_methods;
 use Model\TaxTotal;
 use Model\type_documents;
 use MVC\Router;  //namespace\clase
+
  
 class facturacontroller{
 
@@ -61,6 +62,7 @@ class facturacontroller{
       //totales monetarios
       
       //lineas de factura (registro de los productos o servicios facturados)
+
       //crear el xml
       //firmar XML digitalmente
       //preparar y enviar a Dian pruebas

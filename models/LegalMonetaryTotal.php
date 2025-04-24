@@ -2,23 +2,18 @@
 
 namespace Model;
 
-class mediospago extends ActiveRecord{
-    protected static $tabla = 'mediospago';
-    protected static $columnasDB = ['id', 'mediopago', 'estado', 'nick'];
+class LegalMonetaryTotal extends ActiveRecord{
+    //protected static $tabla = 'LegalMonetaryTotal';
+    //protected static $columnasDB = ['id', 'mediopago', 'estado', 'nick'];
     
     public function __construct($args = []){
-        $this->id = $args['id']??null;
-        $this->mediopago = $args['mediopago']??'';
-        $this->estado = $args['estado']??1;
-        $this->nick = $args['nick']??'';
-    }
-
-
-    public function validar():array
-    {
-        if(!$this->mediopago)self::$alertas['error'][] = "Medio de pago no especificado";
-        if(strlen($this->mediopago)>31)self::$alertas['error'][] = "Has excecido el limite de caracteres";
-        return self::$alertas;
+        $this->line_extension_amount = $args['line_extension_amount']??null;
+        $this->tax_exclusive_amount = $args['tax_exclusive_amount']??'';
+        $this->tax_inclusive_amount = $args['tax_inclusive_amount']??'';
+        $this->allowance_total_amount = $args['allowance_total_amount']??'';
+        $this->charge_total_amount = $args['charge_total_amount']??'';
+        $this->pre_paid_amount = $args['pre_paid_amount']??'';
+        $this->payable_amount = $args['payable_amount']??'';
     }
 
 }
