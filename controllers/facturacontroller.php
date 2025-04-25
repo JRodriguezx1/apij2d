@@ -70,6 +70,7 @@ class facturacontroller{
       }
       //crear el xml
       $invoice = createXML(compact('user', 'company', 'customer', 'taxTotals', 'resolution', 'paymentForm', 'typeDocument', 'invoiceLines', 'allowanceCharges', 'legalMonetaryTotals', 'date', 'time'));
+      debuguear($invoice);
       //firmar XML digitalmente
       //preparar y enviar a Dian pruebas
       //respuesta

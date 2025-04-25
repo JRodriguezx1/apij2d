@@ -11,7 +11,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2     http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd">
 
-    <?php include __DIR__ . '/_ubl_extensions.php'; ?>
+    <?php include __DIR__ . '/ubl_extensions.php'; ?>
 
     <cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
     <cbc:CustomizationID><?= $company['type_operation']['code'] ?></cbc:CustomizationID>
@@ -25,13 +25,23 @@
     <cbc:DocumentCurrencyCode><?= $company['type_currency']['code'] ?></cbc:DocumentCurrencyCode>
     <cbc:LineCountNumeric><?= count($invoiceLines) ?></cbc:LineCountNumeric>
 
-    <?php include __DIR__ . '/_accounting.php'; // AccountingSupplierParty con $supplier = true ?>
-    <?php include __DIR__ . '/_accounting_customer.php'; // AccountingCustomerParty con $user = $customer ?>
-    <?php include __DIR__ . '/_payment_means.php'; ?>
-    <?php include __DIR__ . '/_payment_terms.php'; ?>
-    <?php include __DIR__ . '/_allowance_charges.php'; ?>
-    <?php include __DIR__ . '/_tax_totals.php'; ?>
-    <?php include __DIR__ . '/_legal_monetary_total.php'; ?>
-    <?php include __DIR__ . '/_invoice_lines.php'; ?>
+    <?php 
+
+        $node = 'AccountingSupplierParty';
+        $supplier = true;
+        include __DIR__ . '/accounting.php'; // AccountingSupplierParty con $supplier = true
+        /*
+        $node = 'AccountingCustomerParty';
+        $supplier = false;
+        $user = $customer;
+        include __DIR__ . '/accounting_customer.php'; // AccountingCustomerParty con $user = $customer 
+        
+        include __DIR__ . '/payment_means.php'; 
+        include __DIR__ . '/payment_terms.php'; 
+        include __DIR__ . '/allowance_charges.php'; 
+        include __DIR__ . '/tax_totals.php'; 
+        include __DIR__ . '/legal_monetary_total.php'; 
+        include __DIR__ . '/invoice_lines.php'; */
+    ?>
 
 </Invoice>

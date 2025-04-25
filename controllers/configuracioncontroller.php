@@ -69,8 +69,10 @@ class configuracioncontroller{
                     $alertas['error'][] = "Error en la creacion del nombre o razon social del usuario";
                 }
             }
-            self::software($router, $newCompany[1], $_POST);
-            self::certificate($router, $newCompany[1], $_POST, $_FILES);
+            if($newCompany[0]){
+                self::software($router, $newCompany[1], $_POST);
+                self::certificate($router, $newCompany[1], $_POST, $_FILES);
+            }
             //Creando resolucion pruebas
             $data = [
                 "type_document_id" => 1,
@@ -84,7 +86,7 @@ class configuracioncontroller{
                 "date_from" => "2019-01-19",
                 "date_to" => "2030-01-19"
             ];
-            self::resolution($router, $newCompany[1], $data);
+            //self::resolution($router, $newCompany[1], $data);
         }
 
         $departments = departments::all();
@@ -151,7 +153,8 @@ class configuracioncontroller{
         $certificatedb = certificates::find('company_id', $idcompany);
         if($certificatedb)$r = $certificatedb->eliminar_registro();
         // Guardar el archivo .p12 en disco
-        $storagePath = __DIR__ . "/certificates/$nombreFileP12";
+        //$storagePath =  __DIR__ . "/certificates/$nombreFileP12";
+        $storagePath = $_SERVER['DOCUMENT_ROOT']."/build/archivos/$nombreFileP12";
         move_uploaded_file($tempP12, $storagePath);
         //file_put_contents($storagePath, $certificateBinary);  //se usa cuando se tiene el contenido del archivo en memoria, Una cadena con contenido (ej: base64)
         

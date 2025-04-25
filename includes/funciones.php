@@ -1,6 +1,6 @@
 <?php
 
-use DOMDocument;
+//use DOMDocument;
 
 function debuguear($variable) : string {
     echo "<pre>";
@@ -67,16 +67,32 @@ function digitoVerificacionDIAN($nit) {
 function createXML(array $data)
 {
     try {
-        $templatePath = __DIR__ . "/../views/templates/xml/{$data['typeDocument']['code']}.xml";
+        $templatePath = __DIR__ . "/../views/templates/xml/{$data['typeDocument']['code']}.php";
+        if (!file_exists($templatePath)) {
+            throw new InvalidArgumentException("Plantilla XML no encontrada para el tipo de documento '{$data['typeDocument']['name']}'");
+        }
+
+        // Renderizar plantilla PHP con los datos
+        $renderedXML = renderTemplate($templatePath, $data);
+
+        // Cargar el resultado en DOMDocument
         $DOMDocumentXML = new DOMDocument();
         $DOMDocumentXML->preserveWhiteSpace = false;
         $DOMDocumentXML->formatOutput = true;
-        $DOMDocumentXML->loadXML(view("xml.{$data['typeDocument']['code']}", $data)->render());
-
+        $DOMDocumentXML->loadXML($renderedXML);
         return $DOMDocumentXML;
     } catch (InvalidArgumentException $e) {
         throw new Exception("The API does not support the type of document '{$data['typeDocument']['name']}' Error: {$e->getMessage()}");
     } catch (Exception $e) {
         throw new Exception("Error: {$e->getMessage()}");
     }
+}
+
+// Método auxiliar para renderizar archivos PHP como plantillas
+function renderTemplate(string $templatePath, array $data): string
+{
+    ob_start();
+    extract($data);
+    include $templatePath;
+    return ob_get_clean();
 }
