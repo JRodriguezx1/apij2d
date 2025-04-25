@@ -75,7 +75,7 @@ class configuracioncontroller{
             }
             //Creando resolucion pruebas
             $data = [
-                "type_document_id" => 1,
+                "type_document_id" => 1,  //1 = factura electronica
                 "prefix" => "SETP",
                 "resolution" => "18760000001",
                 "resolution_date" => "2019-01-19",
@@ -86,7 +86,7 @@ class configuracioncontroller{
                 "date_from" => "2019-01-19",
                 "date_to" => "2030-01-19"
             ];
-            //self::resolution($router, $newCompany[1], $data);
+            self::resolution($router, $newCompany[1], $data);
         }
 
         $departments = departments::all();
@@ -166,6 +166,7 @@ class configuracioncontroller{
             //'expiration_date' => $expiration_date,
         ]);
         $r1 = $newCertificate->crear_guardar();
+        if(!$r1[0])debuguear("error al crear certificado");
     }
 
 
@@ -173,14 +174,15 @@ class configuracioncontroller{
         $alertas = [];
         isadmin();
         //verificar si existe una resolucion conel mismo tipo de factura, num resolucion y prefijo que pertenezca a la misma compañia
-        $resol = resolutions::uniquewhereArray(['company_id'=>$idcompany, 'type_document_id'=>$data['tipofactura'], 'resolution'=>$data['resolution'], 'prefix'=>$data['prefix']]);
+        $resol = resolutions::uniquewhereArray(['company_id'=>$idcompany, 'type_document_id'=>$data['type_document_id'], 'resolution'=>$data['resolution'], 'prefix'=>$data['prefix']]);
         /// si ya existe esa resolucion actualizar, de lo contrario crear nueva
         if($resol){
             $resol->compara_objetobd_post($data);
+            $r = $resol->actualizar();
         }else{
             $newResol = new resolutions([
                 'company_id'=>$idcompany,
-                'type_document_id' => $data['tipofactura'],
+                'type_document_id' => $data['type_document_id'],  //tipo de documento, factura electronica, nota credito etc.
                 'prefix'=>$data['prefix'],
                 'resolution'=>$data['resolution'],
                 'resolution_date' => $data['resolution_date'],
@@ -191,6 +193,7 @@ class configuracioncontroller{
                 'date_to' => $data['date_to'],
             ]);
             $r = $newResol->crear_guardar();
+            
         }
     }
 

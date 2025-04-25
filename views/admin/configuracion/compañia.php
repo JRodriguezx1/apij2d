@@ -111,7 +111,7 @@
 
     <table class="display responsive nowrap tabla mt-12" width="100%" id="tablaCompany">
       <thead>
-          <tr>
+          <tr class="text-xl">
               <th>id</th>
               <th>Nombre</th>
               <th>Documento</th>
@@ -123,7 +123,7 @@
       </thead>
       <tbody>
           <?php foreach($companies as $index => $value): ?>
-          <tr> 
+          <tr class="text-xl"> 
               <td class=""><?php echo $index+1;?></td>        
               <td class="" ><?php echo $value->objuser->name;?></td>
               <td class=""><?php echo $value->identification_number.'-'.$value->dv;?></td>

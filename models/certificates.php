@@ -11,7 +11,7 @@ class certificates extends ActiveRecord{
         $this->company_id = $args['company_id']??'';
         $this->name = $args['name']??'';
         $this->password = $args['password']??'';
-        $this->expiration_date = $args['expiration_date']??'';
+        $this->expiration_date = $args['expiration_date']?? date("Y-m-d H:i:s");
         $this->created_at = $args['created_at']?? date("Y-m-d H:i:s");
         $this->updated_at = $args['updated_at']?? '';
     }

@@ -30,10 +30,10 @@ class facturacontroller{
     $alertas = [];
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      //obtener usuario
-      $user = users::find('id', $idusers);
       //obtener compañia
       $company = companies::find('id', $idcompany);
+      //obtener usuario
+      $user = users::find('id', $company->user_id);
       //obtener tipo de documento o factura. ej: factura electronica, nota credito etc
       $typeDocument = type_documents::find('id', $type_document_id);
       //obtener el cliente final o consumidor
@@ -78,7 +78,11 @@ class facturacontroller{
             
     }
     //$alertas = usuarios::getAlertas();
-    $router->render('admin/factura/setdepruebas', ['titulo'=>'setdepruebas', 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
+    $companies = companies::all();
+      foreach($companies as $index => $value){
+        $value->objuser = users::find('id', $value->user_id);
+      }
+    $router->render('admin/factura/setdepruebas', ['titulo'=>'setdepruebas', 'companies'=>$companies, 'alertas'=>$alertas, 'user'=>$_SESSION/*'negocio'=>negocio::get(1)*/]);   //  'autenticacion/login' = carpeta/archivo
   }
 
 
