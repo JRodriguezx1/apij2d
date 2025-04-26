@@ -404,6 +404,7 @@ class ActiveRecord {
     public static function find($colum, $id){
         $sql = "SELECT *FROM ".static::$tabla." WHERE $colum = '${id}' LIMIT 1;";
         $resultado = self::consultar_Sql($sql);
+        debuguear(array_shift($resultado));
         return array_shift($resultado); //array_shift retorna el primer elemento del arreglo
     }
 

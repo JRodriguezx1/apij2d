@@ -67,9 +67,9 @@ function digitoVerificacionDIAN($nit) {
 function createXML(array $data)
 {
     try {
-        $templatePath = __DIR__ . "/../views/templates/xml/{$data['typeDocument']['code']}.php";
+        $templatePath = __DIR__ . "/../views/templates/xml/{$data['typeDocument']->code}.php";
         if (!file_exists($templatePath)) {
-            throw new InvalidArgumentException("Plantilla XML no encontrada para el tipo de documento '{$data['typeDocument']['name']}'");
+            throw new InvalidArgumentException("Plantilla XML no encontrada para el tipo de documento '{$data['typeDocument']->name}'");
         }
 
         // Renderizar plantilla PHP con los datos
@@ -82,7 +82,7 @@ function createXML(array $data)
         $DOMDocumentXML->loadXML($renderedXML);
         return $DOMDocumentXML;
     } catch (InvalidArgumentException $e) {
-        throw new Exception("The API does not support the type of document '{$data['typeDocument']['name']}' Error: {$e->getMessage()}");
+        throw new Exception("The API does not support the type of document '{$data['typeDocument']->name}' Error: {$e->getMessage()}");
     } catch (Exception $e) {
         throw new Exception("Error: {$e->getMessage()}");
     }

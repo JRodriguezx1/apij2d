@@ -6,6 +6,8 @@ class companies extends ActiveRecord {
     protected static $tabla = 'companies';
     protected static $columnasDB = ['id', 'user_id', 'identification_number', 'dv', 'language_id', 'tax_id', 'type_environment_id', 'type_operation_id', 'type_document_identification_id', 'country_id', 'type_currency_id', 'type_organization_id', 'type_regime_id', 'type_liability_id', 'municipality_id', 'merchant_registration', 'address', 'phone', 'created_at', 'updated_at'];
     
+    protected $with = ['country', 'language'];
+
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;

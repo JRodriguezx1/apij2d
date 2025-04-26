@@ -62,6 +62,7 @@ $router->get('/admin/dashboard', [dashboardcontrolador::class, 'index']);
 $router->get('/admin/configuracion/company', [configuracioncontroller::class, 'company']);  // Mostrar el formulario y compañia
 $router->post('/admin/configuracion/company', [configuracioncontroller::class, 'company']); // POS para crear compañia
 $router->get('/admin/factura/setdepruebas', [facturacontroller::class, 'setdepruebas']);  // Mostrar el set de pruebas
+$router->post('/admin/factura/setdepruebas', [facturacontroller::class, 'setdepruebas']);  // enviar el set de pruebas
 
 //////////////////////*********  API  **********//////////////////
 $router->get('/admin/api/citiesXdepartments', [configuracioncontroller::class, 'citiesXdepartments']);  //Consulta municipios segun departamento

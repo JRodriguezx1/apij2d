@@ -2,8 +2,8 @@
     <ext:UBLExtension>
         <ext:ExtensionContent>
             <sts:DianExtensions>
-                <?php if ($resolution['type_document_id'] == 1 && !empty($resolution['resolution'])): ?>
-                    <?php include __DIR__ . '/_invoice_control.php'; ?>
+                <?php if ($resolution->type_document_id == 1 && !empty($resolution->resolution)): ?>
+                    <?php include __DIR__ . '/invoice_control.php'; ?>
                 <?php endif; ?>
 
                 <sts:InvoiceSource>

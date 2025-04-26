@@ -173,7 +173,7 @@ class configuracioncontroller{
     public static function resolution(Router $router, $idcompany, $data):void {
         $alertas = [];
         isadmin();
-        //verificar si existe una resolucion conel mismo tipo de factura, num resolucion y prefijo que pertenezca a la misma compañia
+        //verificar si existe una resolucion con el mismo tipo de factura, num resolucion y prefijo que pertenezca a la misma compañia
         $resol = resolutions::uniquewhereArray(['company_id'=>$idcompany, 'type_document_id'=>$data['type_document_id'], 'resolution'=>$data['resolution'], 'prefix'=>$data['prefix']]);
         /// si ya existe esa resolucion actualizar, de lo contrario crear nueva
         if($resol){
