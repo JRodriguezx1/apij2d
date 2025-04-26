@@ -404,8 +404,16 @@ class ActiveRecord {
     public static function find($colum, $id){
         $sql = "SELECT *FROM ".static::$tabla." WHERE $colum = '${id}' LIMIT 1;";
         $resultado = self::consultar_Sql($sql);
-        debuguear(array_shift($resultado));
-        return array_shift($resultado); //array_shift retorna el primer elemento del arreglo
+        $instancia = array_shift($resultado);
+        
+        if($instancia && property_exists($instancia, "with")){
+            foreach($instancia->with as $metodo){
+                $instancia->$metodo = $instancia->$metodo();
+            }
+        }
+
+        debuguear($instancia);
+        return $instancia; //array_shift retorna el primer elemento del arreglo
     }
 
     //metodo de consulta libre utilizando lenguaje sql de inner_join

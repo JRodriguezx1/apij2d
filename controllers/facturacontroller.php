@@ -99,7 +99,7 @@ class facturacontroller{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       //obtener compañia
       $company = companies::find('id', $_POST['idcompany']);
-      debuguear($company);
+      debuguear($company->country());
       //obtener usuario
       $user = users::find('id', $company->user_id);
       //obtener tipo de documento o factura. ej: factura electronica, nota credito etc

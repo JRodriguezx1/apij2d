@@ -2,11 +2,13 @@
 
 namespace Model;
 
+use Model\countries;
+
 class companies extends ActiveRecord {
     protected static $tabla = 'companies';
     protected static $columnasDB = ['id', 'user_id', 'identification_number', 'dv', 'language_id', 'tax_id', 'type_environment_id', 'type_operation_id', 'type_document_identification_id', 'country_id', 'type_currency_id', 'type_organization_id', 'type_regime_id', 'type_liability_id', 'municipality_id', 'merchant_registration', 'address', 'phone', 'created_at', 'updated_at'];
     
-    protected $with = ['country', 'language'];
+    protected $with = ['country'];
 
     public function __construct($args = [])
     {
@@ -30,6 +32,11 @@ class companies extends ActiveRecord {
         $this->phone = $args['phone'] ?? '';
         $this->created_at = $args['created_at'] ?? date("Y-m-d H:i:s");
         $this->updated_at = $args['updated_at'] ?? '';
+    }
+
+    // CARGA AUTOMATICA
+    public function country(){
+        return countries::find('id', $this->country_id);
     }
 
     // Validación para company nuevas
