@@ -10,14 +10,14 @@ class resolutions extends ActiveRecord{
         $this->id = $args['id']??null;
         $this->company_id = $args['company_id']??'';
         $this->type_document_id = $args['type_document_id']??1;
-        $this->prefix = $args['prefix']??1;
-        $this->resolution = $args['resolution']??1;
+        $this->prefix = $args['prefix']??'';
+        $this->resolution = $args['resolution']??'';
         $this->resolution_date = $args['resolution_date']??'';
         $this->technical_key = $args['technical_key']??'';
         $this->from = $args['from']??'';
         $this->to = $args['to']??'';
         $this->date_from = $args['date_from']??'';
-        $this->date_to = $args['date_to']??0;
+        $this->date_to = $args['date_to']??'';
         $this->created_at = $args['created_at']?? date("Y-m-d H:i:s");
         $this->updated_at = $args['updated_at']?? '';
     }

@@ -78,6 +78,7 @@ class ActiveRecord {
         $sql .= "');";
         $sql = str_replace("''", 'NULL', $sql);
         try {
+            //if(static::$tabla == "resolutions")debuguear($sql);
             $resultado = self::$db->query($sql);
             return [$resultado, self::$db->insert_id];  //insert_id retorna el ultimo registro insertado en la bd
             //  [true/false, id=1,2,3...00] = [0,1] 
@@ -348,6 +349,9 @@ class ActiveRecord {
         $atributos = $this->atributos();  //devuelve arreglo asociativo ['titulo'=>valor_titulo, 'precio'=>valor_precio]
         $sanitizado = [];
         foreach($atributos as $key => $value){
+            if($key == "from" || $key == "to"){
+                $key = "`$key`";
+            }
             if($value == null){
                 $sanitizado[$key] = $value;
             }else{
