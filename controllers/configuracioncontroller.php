@@ -36,7 +36,7 @@ class configuracioncontroller{
                 "dv" => $dv,
                 'language_id' => 79,
                 "tax_id" => $_POST['impuesto'],
-                'type_environment_id' => 2,
+                'type_environment_id' => 2, //2 = modo pruebas
                 'type_operation_id' => 10,
                 "type_document_identification_id" => $_POST['tipo_documento'],
                 'country_id' => 46,

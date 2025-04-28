@@ -14,15 +14,15 @@
     <?php include __DIR__ . '/ubl_extensions.php'; ?>
 
     <cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
-    <cbc:CustomizationID><?= $company['type_operation']['code'] ?></cbc:CustomizationID>
+    <cbc:CustomizationID><?= $company->type_operations->code ?></cbc:CustomizationID>
     <cbc:ProfileID>DIAN 2.1</cbc:ProfileID>
-    <cbc:ProfileExecutionID><?= $company['type_environment']['code'] ?></cbc:ProfileExecutionID>
-    <cbc:ID><?= $resolution['next_consecutive'] ?></cbc:ID>
-    <cbc:UUID schemeID="<?= $company['type_environment']['code'] ?>" schemeName="<?= $typeDocument['cufe_algorithm'] ?>"/>
+    <cbc:ProfileExecutionID><?= $company->type_environments->code ?></cbc:ProfileExecutionID>
+    <cbc:ID><?= $resolution->prefix.$resolution->number ?></cbc:ID>
+    <cbc:UUID schemeID="<?= $company->type_environments->code ?>" schemeName="<?= $typeDocument->cufe_algorithm ?>"/>
     <cbc:IssueDate><?= $date ?? date('Y-m-d') ?></cbc:IssueDate>
     <cbc:IssueTime><?= $time ?? date('H:i:s') ?>-05:00</cbc:IssueTime>
-    <cbc:InvoiceTypeCode><?= $typeDocument['code'] ?></cbc:InvoiceTypeCode>
-    <cbc:DocumentCurrencyCode><?= $company['type_currency']['code'] ?></cbc:DocumentCurrencyCode>
+    <cbc:InvoiceTypeCode><?= $typeDocument->code ?></cbc:InvoiceTypeCode>
+    <cbc:DocumentCurrencyCode><?= $company->type_currencies->code ?></cbc:DocumentCurrencyCode>
     <cbc:LineCountNumeric><?= count($invoiceLines) ?></cbc:LineCountNumeric>
 
     <?php 
@@ -30,12 +30,12 @@
         $node = 'AccountingSupplierParty';
         $supplier = true;
         include __DIR__ . '/accounting.php'; // AccountingSupplierParty con $supplier = true
-        /*
+        
         $node = 'AccountingCustomerParty';
         $supplier = false;
         $user = $customer;
-        include __DIR__ . '/accounting_customer.php'; // AccountingCustomerParty con $user = $customer 
-        
+        //include __DIR__ . '/accounting_customer.php'; // AccountingCustomerParty con $user = $customer 
+        /*
         include __DIR__ . '/payment_means.php'; 
         include __DIR__ . '/payment_terms.php'; 
         include __DIR__ . '/allowance_charges.php'; 

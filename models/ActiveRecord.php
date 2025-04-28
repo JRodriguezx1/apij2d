@@ -405,14 +405,11 @@ class ActiveRecord {
         $sql = "SELECT *FROM ".static::$tabla." WHERE $colum = '${id}' LIMIT 1;";
         $resultado = self::consultar_Sql($sql);
         $instancia = array_shift($resultado);
-        
+        //CARGA AUNTOMATICA DE RELACION UNO A UNO
         if($instancia && property_exists($instancia, "with")){
-            foreach($instancia->with as $metodo){
-                $instancia->$metodo = $instancia->$metodo();
-            }
+            foreach($instancia->with as $metodo)
+                if(method_exists($instancia, $metodo))$instancia->$metodo = $instancia->$metodo();
         }
-
-        debuguear($instancia);
         return $instancia; //array_shift retorna el primer elemento del arreglo
     }
 

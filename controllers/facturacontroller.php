@@ -99,17 +99,17 @@ class facturacontroller{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       //obtener compañia
       $company = companies::find('id', $_POST['idcompany']);
-      debuguear($company->country());
+      //debuguear($company);
       //obtener usuario
       $user = users::find('id', $company->user_id);
       //obtener tipo de documento o factura. ej: factura electronica, nota credito etc
-      $typeDocument = type_documents::find('id', $type_document_id??1);
+      $typeDocument = type_documents::find('id', $datos['type_document_id']??1);
       //obtener el cliente final o consumidor
       $customer = new users($datos['customer']);
       $customer->company = new companies($datos['customer']);
       //obtener resolucion y numeracion
       $resolution = resolutions::uniquewhereArray(['company_id'=>$_POST['idcompany'], 'type_document_id'=>$datos['type_document_id'], 'resolution'=>$datos['resolution_number'], 'prefix'=>$datos['prefix']]);
-      $resolution->number = $datos['resolution_number'];
+      $resolution->number = $datos['number'];
       //fecha y hora
       $date = $fechaActual;
       $time = date("H:i:s");

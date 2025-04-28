@@ -74,12 +74,16 @@ function createXML(array $data)
 
         // Renderizar plantilla PHP con los datos
         $renderedXML = renderTemplate($templatePath, $data);
+        //debuguear($renderedXML);
 
         // Cargar el resultado en DOMDocument
         $DOMDocumentXML = new DOMDocument();
         $DOMDocumentXML->preserveWhiteSpace = false;
         $DOMDocumentXML->formatOutput = true;
         $DOMDocumentXML->loadXML($renderedXML);
+        //echo $DOMDocumentXML->saveXML();
+        //echo $DOMDocumentXML->saveXML($DOMDocumentXML->documentElement);
+        //echo htmlentities($DOMDocumentXML->saveXML());
         return $DOMDocumentXML;
     } catch (InvalidArgumentException $e) {
         throw new Exception("The API does not support the type of document '{$data['typeDocument']->name}' Error: {$e->getMessage()}");

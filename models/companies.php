@@ -2,13 +2,11 @@
 
 namespace Model;
 
-use Model\countries;
-
 class companies extends ActiveRecord {
     protected static $tabla = 'companies';
     protected static $columnasDB = ['id', 'user_id', 'identification_number', 'dv', 'language_id', 'tax_id', 'type_environment_id', 'type_operation_id', 'type_document_identification_id', 'country_id', 'type_currency_id', 'type_organization_id', 'type_regime_id', 'type_liability_id', 'municipality_id', 'merchant_registration', 'address', 'phone', 'created_at', 'updated_at'];
     
-    protected $with = ['country'];
+    protected $with = ['software', 'certificate', 'resolutions', 'languages', 'taxes', 'type_environments', 'type_operations', 'type_document_identifications', 'country', 'type_currencies', 'type_organizations', 'type_regimes', 'type_liabilities', 'municipalities'];
 
     public function __construct($args = [])
     {
@@ -18,7 +16,7 @@ class companies extends ActiveRecord {
         $this->dv = $args['dv'] ?? '';
         $this->language_id = $args['language_id'] ?? 79;
         $this->tax_id = $args['tax_id'] ?? 1;
-        $this->type_environment_id = $args['type_environment_id'] ?? 2;
+        $this->type_environment_id = $args['type_environment_id'] ?? 2; //2 = modo pruebas
         $this->type_operation_id = $args['type_operation_id'] ?? 10;
         $this->type_document_identification_id = $args['type_document_identification_id'] ?? '';
         $this->country_id = $args['country_id'] ?? 46;
@@ -34,9 +32,48 @@ class companies extends ActiveRecord {
         $this->updated_at = $args['updated_at'] ?? '';
     }
 
-    // CARGA AUTOMATICA
+    // CARGA AUTOMATICA DE RELACION UNO A UNO, ID DE COMPANIES SE PROPAGA A OTRAS TABLAS
+    public function languages(){
+        return languages::find('id', $this->language_id);
+    }
+    public function taxes(){
+        return taxes::find('id', $this->tax_id);
+    }
+    public function type_environments(){
+        return type_environments::find('id', $this->type_environment_id);
+    }
+    public function type_operations(){
+        return type_operations::find('id', $this->type_operation_id);
+    }
+    public function type_document_identifications(){
+        return type_document_identifications::find('id', $this->type_document_identification_id);
+    }
     public function country(){
         return countries::find('id', $this->country_id);
+    }
+    public function type_currencies(){
+        return type_currencies::find('id', $this->type_currency_id);
+    }
+    public function type_organizations(){
+        return type_organizations::find('id', $this->type_organization_id);
+    }
+    public function type_regimes(){
+        return type_regimes::find('id', $this->type_regime_id);
+    }
+    public function type_liabilities(){
+        return type_liabilities::find('id', $this->type_liability_id);
+    }
+    public function municipalities(){
+        return municipalities::find('id', $this->municipality_id);
+    }
+    public function software(){
+        return software::find('company_id', $this->id);
+    }
+    public function certificate(){
+        return certificates::find('company_id', $this->id);
+    }
+    public function resolutions(){
+        return resolutions::find('company_id', $this->id);
     }
 
     // Validación para company nuevas
