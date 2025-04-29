@@ -83,12 +83,12 @@ function createXML(array $data)
         $DOMDocumentXML->loadXML($renderedXML);
         //echo $DOMDocumentXML->saveXML();
         //echo $DOMDocumentXML->saveXML($DOMDocumentXML->documentElement);
-        //echo htmlentities($DOMDocumentXML->saveXML());
+        echo htmlentities($DOMDocumentXML->saveXML());
         return $DOMDocumentXML;
     } catch (InvalidArgumentException $e) {
-        throw new Exception("The API does not support the type of document '{$data['typeDocument']->name}' Error: {$e->getMessage()}");
+        debuguear($e->getMessage());
     } catch (Exception $e) {
-        throw new Exception("Error: {$e->getMessage()}");
+        debuguear($e->getMessage());
     }
 }
 

@@ -114,15 +114,15 @@ class facturacontroller{
       $date = $fechaActual;
       $time = date("H:i:s");
       //forma de pago
-      $paymentFormAll = (object) array_merge(self::$paymentFormDefault, $datos['payment_form'] ?? []);
+      $paymentFormAll = (object) array_merge(self::$paymentFormDefault, $datos['payment_form'] ?? []);  //$datos['payment_form'] me trae tambien "payment_due_date", "duration_measure"
       $paymentForm = payment_forms::find('id', $paymentFormAll->payment_form_id);
       $paymentForm->payment_method_code = payment_methods::find('id', $paymentFormAll->payment_method_id)->code;
       $paymentForm->payment_due_date = $paymentFormAll->payment_due_date ?? null;
       $paymentForm->duration_measure = $paymentFormAll->duration_measure ?? null;
       //cargos y descuentos
-      $cargosDescuentos = [];
+      $allowanceCharges = [];
       foreach ($datos['allowance_charges'] ?? [] as $cargoDescuento) {
-        array_push($cargosDescuentos, new AllowanceCharge($cargoDescuento));
+        array_push($allowanceCharges, new AllowanceCharge($cargoDescuento));
       }
       //impuestos
       $taxTotals = [];
@@ -138,7 +138,7 @@ class facturacontroller{
       }
       //debuguear(1);
       //crear el xml
-      $invoice = createXML(compact('user', 'company', 'customer', 'taxTotals', 'resolution', 'paymentForm', 'typeDocument', 'invoiceLines', 'cargosDescuentos', 'legalMonetaryTotals', 'date', 'time'));
+      $invoice = createXML(compact('user', 'company', 'customer', 'taxTotals', 'resolution', 'paymentForm', 'typeDocument', 'invoiceLines', 'allowanceCharges', 'legalMonetaryTotals', 'date', 'time'));
       debuguear($invoice);
       //firmar XML digitalmente
       //preparar y enviar a Dian pruebas

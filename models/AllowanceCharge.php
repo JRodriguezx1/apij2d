@@ -12,8 +12,7 @@ class AllowanceCharge extends ActiveRecord{
     public $multiplier_factor_numeric;
     public $amount;
     public $base_amount;
-
-    public $discount;
+    public $discount; //campo virtual
     
     public function __construct($args = []){
         $this->discount_id = $args['discount_id']??null;
@@ -22,6 +21,8 @@ class AllowanceCharge extends ActiveRecord{
         $this->multiplier_factor_numeric = $args['multiplier_factor_numeric']?? null;
         $this->amount = $args['amount']?? 0;
         $this->base_amount = $args['base_amount ']?? 1;
+
+        $this->loadDiscount();
     }
 
     /**
@@ -53,8 +54,7 @@ class AllowanceCharge extends ActiveRecord{
     public function loadDiscount()
     {
         // Aquí debes implementar la lógica para traer el descuento desde base de datos
-        // Ejemplo simulado:
-        //$this->discount = Discount::find($this->discount_id);
+        $this->discount = discounts::find('id', $this->discount_id);
     }
 
     /**

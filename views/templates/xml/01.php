@@ -34,14 +34,14 @@
         $node = 'AccountingCustomerParty';
         $supplier = false;
         $user = $customer;
-        //include __DIR__ . '/accounting_customer.php'; // AccountingCustomerParty con $user = $customer 
-        /*
+        include __DIR__ . '/accounting.php'; // AccountingCustomerParty con $user = $customer 
+        
         include __DIR__ . '/payment_means.php'; 
         include __DIR__ . '/payment_terms.php'; 
         include __DIR__ . '/allowance_charges.php'; 
         include __DIR__ . '/tax_totals.php'; 
         include __DIR__ . '/legal_monetary_total.php'; 
-        include __DIR__ . '/invoice_lines.php'; */
+        //include __DIR__ . '/invoice_lines.php';
     ?>
 
 </Invoice>
