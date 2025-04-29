@@ -14,24 +14,28 @@ class TaxTotal extends ActiveRecord{
     public $base_unit_measure;
     public $per_unit_amount;
 
+    public $is_fixed_value;  //impuesto de valor fijo o por unidad
+
     public $tax;
     public $unit_measure;
 
     public function __construct($args = []){
-        $this->tax_id = $args['tax_id']??null;
-        $this->unit_measure_id = $args['unit_measure_id']??'';
-        $this->percent = $args['percent']??'';
-        $this->tax_amount = $args['tax_amount']??'';
-        $this->taxable_amount = $args['taxable_amount']??'';
-        $this->base_unit_measure = $args['base_unit_measure']??'';
-        $this->per_unit_amount = $args['per_unit_amount']??'';
+        $this->tax_id = $args['tax_id']??null;                          //FK al impuesto (IVA, retención, etc.)    -------------------> si allowance_charges esta presente se requiere
+        $this->unit_measure_id = $args['unit_measure_id']??null;        //FK a la unidad de medida     -------------------------------> si tax_id == 10 se requiere
+        $this->percent = $args['percent']??0;                           //Porcentaje del impuesto    ---------------------------------> si tax_id != 10 se requiere
+        $this->tax_amount = $args['tax_amount']??0;                     //Monto del impuesto    --------------------------------------> si allowance_charges esta presente se requiere
+        $this->taxable_amount = $args['taxable_amount']??0;             //Monto sobre el que se calcula el impuesto    ---------------> si allowance_charges esta presente se requiere
+        $this->base_unit_measure = $args['base_unit_measure']??null;    //Cantidad base sobre la que se aplica (para unitarios)   ----> si tax_id == 10 se requiere
+        $this->per_unit_amount = $args['per_unit_amount']??0;           //Valor del impuesto por unidad    ---------------------------> si tax_id == 10 se requiere
+
+        $this->is_fixed_value = $this->getIsFixedValue();               //true si el impuesto es fijo por unidad (cuando tax_id = 10)
 
         $this->taxes();
         $this->unitmeasure();
     }
 
 
-    public function getIsFixedValue()
+    public function getIsFixedValue() //si es fijo o proporcional
     {
         return $this->tax_id == 10; //true si el impuesto es fijo por unidad (cuando tax_id = 10)
     }
@@ -45,5 +49,36 @@ class TaxTotal extends ActiveRecord{
     }
 
 }
+
+/*
+Caso 1: tax_id = 19, sin allowance_charges
+$data = [
+    'tax_id' => 19,
+    'percent' => 19,
+    'tax_amount' => 3800,
+    'taxable_amount' => 20000,
+    // No se requiere unit_measure_id, per_unit_amount ni base_unit_measure
+];
+
+Caso 2: tax_id = 10, requiere valores por unidad
+$data = [
+    'tax_id' => 10,
+    'unit_measure_id' => 2,
+    'per_unit_amount' => 1900,
+    'base_unit_measure' => 1,
+    'tax_amount' => 1900,
+    'taxable_amount' => 20000,
+    // percent no es requerido si tax_id == 10
+];
+
+Caso 3: Cuando se envían allowance_charges
+$data = [
+    'tax_id' => 5,
+    'percent' => 16,
+    'tax_amount' => 300,
+    'taxable_amount' => 1875,
+    // Se vuelve obligatorio por el presence of `allowance_charges`
+];
+*/
 
 ?>
