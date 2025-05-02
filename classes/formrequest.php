@@ -12,6 +12,7 @@ use Model\payment_methods;
 use Model\taxes;
 use Model\type_document_identifications;
 use Model\type_documents;
+use Model\type_item_identifications;
 use Model\type_liabilities;
 use Model\type_organizations;
 use Model\type_regimes;
@@ -310,8 +311,38 @@ class formrequest
                     $this::$alertas['error'][] = 'El campo unit_measure_id es requerido y debe existir en la DB.';
                 }
                 
-                if(!($item['unit_measure_id']??null) || !unit_measures::find('id', $item['unit_measure_id'])){
-                    $this::$alertas['error'][] = 'El campo unit_measure_id es requerido y debe existir en la DB.';
+                if(!($item['invoiced_quantity']??null) || !is_numeric($item['invoiced_quantity'])){
+                    $this::$alertas['error'][] = 'El campo invoiced_quantity es requerido y debe ser numerico';
+                }
+
+                if(!($item['line_extension_amount']??null) || !is_numeric($item['line_extension_amount'])){
+                    $this::$alertas['error'][] = 'El campo line_extension_amount es requerido y debe ser numerico';
+                }
+
+                if(!($item['free_of_charge_indicator']??null) || !is_bool($item['free_of_charge_indicator'])){
+                    $this::$alertas['error'][] = 'El campo free_of_charge_indicator es requerido y debe ser boleano';
+                }
+
+                //.....
+
+                if(!($item['description']??null) || !is_string($item['allowance_charge_reason'])){
+                    $this::$alertas['error'][] = 'El campo description es requerido y debe ser texto.';
+                }
+                
+                if(!($item['code']??null) || !is_string($item['code'])){
+                    $this::$alertas['error'][] = 'El campo code es requerido y debe ser texto';
+                }
+
+                if(!($item['type_item_identification_id']??null) || !type_item_identifications::find('id', $item['type_item_identification_id'])){
+                    $this::$alertas['error'][] = 'El campo type_item_identification_id es requerido y debe existir en la DB';
+                }
+
+                if(!($item['price_amount']??null) || !is_numeric($item['price_amount'])){
+                    $this::$alertas['error'][] = 'El campo price_amount es requerido y debe ser numerico';
+                }
+
+                if(!($item['base_quantity']??null) || !is_numeric($item['base_quantity'])){
+                    $this::$alertas['error'][] = 'El campo base_quantity es requerido y debe ser numerico';
                 }
 
             }

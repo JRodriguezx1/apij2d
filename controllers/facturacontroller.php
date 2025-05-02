@@ -102,6 +102,7 @@ class facturacontroller{
       $validate = new formrequest($datos, []);
       debuguear($validate->errors());
       
+      if(empty($validate->errors())){
         //obtener compañia
         $company = companies::find('id', $_POST['idcompany']);
         //obtener usuario
@@ -151,8 +152,9 @@ class facturacontroller{
         //preparar y enviar a Dian pruebas
         //respuesta
 
-            
-    }
+      }
+    } //fin REQUEST_METHOD
+
     //$alertas = usuarios::getAlertas();
     $companies = companies::all();
       foreach($companies as $index => $value){
