@@ -27,6 +27,7 @@ class InvoiceLine extends ActiveRecord{
     public $reference_price;
     
     public function __construct(array $args = []){
+        
         $this->unit_measure_id = $args['unit_measure_id'] ?? null;
         $this->type_item_identification_id = $args['type_item_identification_id'] ?? null;
         $this->reference_price_id = $args['reference_price_id'] ?? null;

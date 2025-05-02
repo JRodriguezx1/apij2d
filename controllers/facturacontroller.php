@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Classes\Email;
+use Classes\formrequest;
 use Model\AllowanceCharge;
 use Model\usuarios;
 use Model\users;
@@ -33,7 +34,7 @@ class facturacontroller{
     $facturaNumber = '9944' . random_int(10000, 99000);
     $fechaActual = date("Y-m-d");
     $datos = [
-      "prefix" => "SETP",
+      "prefix" => "SETP",                                // prefijo
       "number" => $facturaNumber,                        // numero de factura o consecutivo
       "type_document_id" => "1",                         // tipo de documento 1 = factura electronica
       "date" => $fechaActual,
@@ -42,8 +43,8 @@ class facturacontroller{
       "sendmail" => false,
       "notes" => "Factura Electroncia de pruebas Auto",
       "payment_form" => [
-          "payment_form_id" => "1",
-          "payment_method_id" => "10",
+          "payment_form_id" => "1",                      // contado
+          "payment_method_id" => "10",                   // efectivo
           "payment_due_date" => $fechaActual,
           "duration_measure" => "0"
       ],
@@ -97,52 +98,58 @@ class facturacontroller{
     //////////////////*************///////////////////
 
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
-      //obtener compañia
-      $company = companies::find('id', $_POST['idcompany']);
-      //debuguear($company);
-      //obtener usuario
-      $user = users::find('id', $company->user_id);
-      //obtener tipo de documento o factura. ej: factura electronica, nota credito etc
-      $typeDocument = type_documents::find('id', $datos['type_document_id']??1);
-      //obtener el cliente final o consumidor
-      $customer = new users($datos['customer']);
-      $customer->company = new companies($datos['customer']);
-      //obtener resolucion y numeracion
-      $resolution = resolutions::uniquewhereArray(['company_id'=>$_POST['idcompany'], 'type_document_id'=>$datos['type_document_id'], 'resolution'=>$datos['resolution_number'], 'prefix'=>$datos['prefix']]);
-      $resolution->number = $datos['number'];
-      //fecha y hora
-      $date = $fechaActual;
-      $time = date("H:i:s");
-      //forma de pago
-      $paymentFormAll = (object) array_merge(self::$paymentFormDefault, $datos['payment_form'] ?? []);  //$datos['payment_form'] me trae tambien "payment_due_date", "duration_measure"
-      $paymentForm = payment_forms::find('id', $paymentFormAll->payment_form_id);
-      $paymentForm->payment_method_code = payment_methods::find('id', $paymentFormAll->payment_method_id)->code;
-      $paymentForm->payment_due_date = $paymentFormAll->payment_due_date ?? null;
-      $paymentForm->duration_measure = $paymentFormAll->duration_measure ?? null;
-      //cargos y descuentos
-      $allowanceCharges = [];
-      foreach ($datos['allowance_charges'] ?? [] as $cargoDescuento) {
-        array_push($allowanceCharges, new AllowanceCharge($cargoDescuento));
-      }
-      //impuestos
-      $taxTotals = [];
-      foreach ($datos['tax_totals'] ?? [] as $taxTotal) {
-          array_push($taxTotals, new TaxTotal($taxTotal));
-      }
-      //totales monetarios
-      $legalMonetaryTotals = new LegalMonetaryTotal($datos['legal_monetary_totals']);
-      //lineas de factura (registro de los productos o servicios facturados)
-      $invoiceLines = [];
-      foreach ($datos['invoice_lines'] ?? [] as $invoiceLine) {
-          array_push($invoiceLines, new InvoiceLine($invoiceLine));
-      }
-      //debuguear(1);
-      //crear el xml
-      $invoice = createXML(compact('user', 'company', 'customer', 'taxTotals', 'resolution', 'paymentForm', 'typeDocument', 'invoiceLines', 'allowanceCharges', 'legalMonetaryTotals', 'date', 'time'));
-      debuguear($invoice);
-      //firmar XML digitalmente
-      //preparar y enviar a Dian pruebas
-      //respuesta
+      //validacion Form Request
+      $validate = new formrequest($datos, []);
+      debuguear($validate->errors());
+      
+        //obtener compañia
+        $company = companies::find('id', $_POST['idcompany']);
+        //obtener usuario
+        $user = users::find('id', $company->user_id);
+        //obtener tipo de documento o factura. ej: factura electronica, nota credito etc
+        $typeDocument = type_documents::find('id', $datos['type_document_id']??1);
+        //obtener el cliente final o consumidor
+        $customer = new users($datos['customer']);
+        $customer->company = new companies($datos['customer']);
+        //obtener resolucion y numeracion
+        $resolution = resolutions::uniquewhereArray(['company_id'=>$_POST['idcompany'], 'type_document_id'=>$datos['type_document_id'], 'resolution'=>$datos['resolution_number'], 'prefix'=>$datos['prefix']]);
+        $resolution->number = $datos['number'];
+        //fecha y hora
+        $date = $fechaActual;
+        $time = date("H:i:s");
+        //forma de pago
+        $paymentFormAll = (object) array_merge(self::$paymentFormDefault, $datos['payment_form'] ?? []);  //$datos['payment_form'] me trae tambien "payment_due_date", "duration_measure"
+        $paymentForm = payment_forms::find('id', $paymentFormAll->payment_form_id);
+        $paymentForm->payment_method_code = payment_methods::find('id', $paymentFormAll->payment_method_id)->code;
+        $paymentForm->payment_due_date = $paymentFormAll->payment_due_date ?? null;
+        $paymentForm->duration_measure = $paymentFormAll->duration_measure ?? null;
+        //cargos y descuentos
+        $allowanceCharges = [];
+        foreach ($datos['allowance_charges'] ?? [] as $cargoDescuento) {
+          array_push($allowanceCharges, new AllowanceCharge($cargoDescuento));
+        }
+        //impuestos
+        $taxTotals = [];
+        foreach ($datos['tax_totals'] ?? [] as $taxTotal) {
+            array_push($taxTotals, new TaxTotal($taxTotal));
+        }
+        //totales monetarios
+        $legalMonetaryTotals = new LegalMonetaryTotal($datos['legal_monetary_totals']);
+        //lineas de factura (registro de los productos o servicios facturados)
+        $invoiceLines = [];
+        foreach ($datos['invoice_lines'] ?? [] as $invoiceLine) {
+            array_push($invoiceLines, new InvoiceLine($invoiceLine));
+        }
+        
+        //validar datos recibidos antes de armar el XML
+        //if()
+        
+        //crear el xml
+        $invoice = createXML(compact('user', 'company', 'customer', 'taxTotals', 'resolution', 'paymentForm', 'typeDocument', 'invoiceLines', 'allowanceCharges', 'legalMonetaryTotals', 'date', 'time'));
+        debuguear($invoice);
+        //firmar XML digitalmente
+        //preparar y enviar a Dian pruebas
+        //respuesta
 
             
     }

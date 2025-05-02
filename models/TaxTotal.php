@@ -20,15 +20,16 @@ class TaxTotal extends ActiveRecord{
     public $unit_measure;
 
     public function __construct($args = []){
-        $this->tax_id = $args['tax_id']??null;                          //FK al impuesto (IVA, retención, etc.)    -------------------> si allowance_charges esta presente se requiere
-        $this->unit_measure_id = $args['unit_measure_id']??null;        //FK a la unidad de medida     -------------------------------> si tax_id == 10 se requiere
-        $this->percent = $args['percent']??0;                           //Porcentaje del impuesto    ---------------------------------> si tax_id != 10 se requiere
-        $this->tax_amount = $args['tax_amount']??0;                     //Monto del impuesto    --------------------------------------> si allowance_charges esta presente se requiere
-        $this->taxable_amount = $args['taxable_amount']??0;             //Monto sobre el que se calcula el impuesto    ---------------> si allowance_charges esta presente se requiere
-        $this->base_unit_measure = $args['base_unit_measure']??null;    //Cantidad base sobre la que se aplica (para unitarios)   ----> si tax_id == 10 se requiere
-        $this->per_unit_amount = $args['per_unit_amount']??0;           //Valor del impuesto por unidad    ---------------------------> si tax_id == 10 se requiere
 
-        $this->is_fixed_value = $this->getIsFixedValue();               //true si el impuesto es fijo por unidad (cuando tax_id = 10)
+        $this->tax_id = $args['tax_id']??null;                        //FK al impuesto (IVA, retención, etc.)    -------------------> si allowance_charges esta presente se requiere
+        $this->unit_measure_id = $args['unit_measure_id']??null;      //FK a la unidad de medida     -------------------------------> si tax_id == 10 se requiere
+        $this->percent = $args['percent']??0;                         //Porcentaje del impuesto    ---------------------------------> si tax_id != 10 se requiere
+        $this->tax_amount = $args['tax_amount']??0;                   //Monto del impuesto    --------------------------------------> si allowance_charges esta presente se requiere
+        $this->taxable_amount = $args['taxable_amount']??0;           //Monto sobre el que se calcula el impuesto    ---------------> si allowance_charges esta presente se requiere
+        $this->base_unit_measure = $args['base_unit_measure']??null;  //Cantidad base sobre la que se aplica (para unitarios)   ----> si tax_id == 10 se requiere
+        $this->per_unit_amount = $args['per_unit_amount']??0;         //Valor del impuesto por unidad    ---------------------------> si tax_id == 10 se requiere
+
+        $this->is_fixed_value = $this->getIsFixedValue();             //true si el impuesto es fijo por unidad (cuando tax_id = 10)
 
         $this->taxes();
         $this->unitmeasure();
@@ -68,17 +69,74 @@ $data = [
     'base_unit_measure' => 1,
     'tax_amount' => 1900,
     'taxable_amount' => 20000,
-    // percent no es requerido si tax_id == 10
 ];
 
-Caso 3: Cuando se envían allowance_charges
+Caso 3: tax_id ≠ 10 con allowance_charges
 $data = [
     'tax_id' => 5,
     'percent' => 16,
     'tax_amount' => 300,
     'taxable_amount' => 1875,
-    // Se vuelve obligatorio por el presence of `allowance_charges`
 ];
+
+Caso 4: Cuando tax_id = 10 sin allowance_charges
+{
+    "tax_totals": [
+        {
+            "tax_id": 10,
+            "unit_measure_id": 1,
+            "per_unit_amount": 2.5,
+            "base_unit_measure": 100
+        }
+    ]
+}
+
+Caso 4: Cuando tax_id = 10 con allowance_charges
+{
+    "tax_totals": [
+        {
+            "tax_id": 10,
+            "unit_measure_id": 3,
+            "per_unit_amount": 0.50,
+            "base_unit_measure": 100,
+            "tax_amount": 50,
+            "taxable_amount": 100
+        }
+    ],
+    "allowance_charges": true
+}
+
+Caso 5: Cuando tax_id ≠ 10 sin allowance_charges
+{
+    "tax_totals": [
+        {
+            "percent": 18  // Obligatorio (tax_id ≠ 10)
+            // Los demás campos son opcionales
+        }
+    ],
+}
+
+Caso 6: Cuando tax_id ≠ 10 sin allowance_charges
+{
+    "tax_totals": [
+        {
+            "tax_id": 5,  // Opcional (pero si se envía, debe existir en la DB)
+            "percent": 18
+        }
+    ],
+}
+
+Caso 7: Cuando tax_id ≠ 10 sin allowance_charges
+{
+    "tax_totals": [
+        {
+            "tax_id": 5,
+            "percent": 18,
+            "tax_amount": 36,       // Opcional (sin allowance_charges)
+            "taxable_amount": 200   // Opcional (sin allowance_charges)
+        }
+    ]
+}
 */
 
 ?>

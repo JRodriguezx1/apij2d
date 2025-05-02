@@ -85,45 +85,81 @@ class companies extends ActiveRecord {
             self::$alertas['error'][] = 'Numero de indentificacion no es un numero';
         }elseif(strlen($this->identification_number)<1 || strlen($this->identification_number)>15){
             self::$alertas['error'][] = 'Numero de indentificacion debe estar entre 1 y 15 digitos';
-        }/*elseif (numeronitYaExiste($data['identification_number'])) {
-            self::$alertas['error'][] = 'Este identification_number ya está registrado.';
-        }*/
+        }elseif (companies::find('identification_number', $this->identification_number)) {
+            self::$alertas['error'][] = 'El numero de identificacion ya está registrado.';
+        }
         // Validacion DV
         if(!$this->dv){
             self::$alertas['error'][] = 'El digito verificador es obligatorio';
         }elseif (!is_numeric($this->dv) || strlen($this->dv) != 1){
-            self::$alertas['error'][] = 'El digito verificador debe ser de un digito';
+            self::$alertas['error'][] = 'El digito verificador debe ser de un digito y numerico';
+        }
+        // Validacion language_id
+        if(!$this->language_id){
+            self::$alertas['error'][] = 'Idioma es obligatorio';
+        }elseif(!languages::find('id', $this->language_id)){
+            self::$alertas['error'][] = 'tipo de idioma no encontrada en DB';
+        }
+        // Validacion tax_id
+        if(!$this->tax_id){
+            self::$alertas['error'][] = 'El impuesto es obligatorio';
+        }elseif(!taxes::find('id', $this->tax_id)){
+            self::$alertas['error'][] = 'tipo de impuesto no encontrada en DB';
+        }
+        // Validacion type_environment_id
+        if(!$this->type_environment_id){
+            self::$alertas['error'][] = 'Entrono es obligatorio';
+        }elseif(!type_environments::find('id', $this->type_environment_id)){
+            self::$alertas['error'][] = 'tipo de entorno no encontrada en DB';
+        }
+        // Validacion type_operation_id
+        if(!$this->type_operation_id){
+            self::$alertas['error'][] = 'Operacion es obligatorio';
+        }elseif(!type_operations::find('id', $this->type_operation_id)){
+            self::$alertas['error'][] = 'tipo de operacion no encontrada en DB';
         }
         // Validacion type_document_identification_id
         if(!$this->type_document_identification_id){
-            self::$alertas['error'][] = 'El tipo de documento es obligatorio';
-        }/*elseif(vlidar type_document_identification_id en db)){
-            self::$alertas['error'][] = 'Numero de indentificacion no es un numero';
-        }*/
+            self::$alertas['error'][] = 'El tipo de documento de identidad es obligatorio';
+        }elseif(!type_document_identifications::find('id', $this->type_document_identification_id)){
+            self::$alertas['error'][] = 'tipo de identificacion no encontrada en DB';
+        }
+        // Validacion country_id
+        if(!$this->country_id){
+            self::$alertas['error'][] = 'Pais es obligatorio';
+        }elseif(!countries::find('id', $this->country_id)){
+            self::$alertas['error'][] = 'Pais no encontrada en DB';
+        }
+        // Validacion type_currency_id
+        if(!$this->type_currency_id){
+            self::$alertas['error'][] = 'Moneda es obligatorio';
+        }elseif(!type_currencies::find('id', $this->type_currency_id)){
+            self::$alertas['error'][] = 'Moneda no encontrada en DB';
+        }
         // Validacion type_organization_id
         if(!$this->type_organization_id){
-            self::$alertas['error'][] = 'El tipo de documento es obligatorio';
-        }/*elseif(vlidar type_document_identification_id en db)){
-            self::$alertas['error'][] = 'Numero de indentificacion no es un numero';
-        }*/
+            self::$alertas['error'][] = 'El tipo de organizacion es obligatorio';
+        }elseif(!type_organizations::find('id', $this->type_organization_id)){
+            self::$alertas['error'][] = 'tipo de organizacion no encontrada en DB';
+        }
         // Validacion type_regime_id
         if(!$this->type_regime_id){
-            self::$alertas['error'][] = 'El tipo de documento es obligatorio';
-        }/*elseif(vlidar type_document_identification_id en db)){
-            self::$alertas['error'][] = 'Numero de indentificacion no es un numero';
-        }*/
+            self::$alertas['error'][] = 'El tipo de regimen es obligatorio';
+        }elseif(!type_regimes::find('id', $this->type_regime_id)){
+            self::$alertas['error'][] = 'tipo de regimen no encontrada en DB';
+        }
         // Validacion type_liability_id
         if(!$this->type_liability_id){
-            self::$alertas['error'][] = 'El tipo de documento es obligatorio';
-        }/*elseif(vlidar type_document_identification_id en db)){
-            self::$alertas['error'][] = 'Numero de indentificacion no es un numero';
-        }*/
+            self::$alertas['error'][] = 'El tipo de responsabilidad es obligatorio';
+        }elseif(!type_liabilities::find('id', $this->type_liability_id)){
+            self::$alertas['error'][] = 'tipo de responsabilidad no encontrada en DB';
+        }
         // Validacion municipality_id
         if(!$this->municipality_id){
-            self::$alertas['error'][] = 'El tipo de documento es obligatorio';
-        }/*elseif(vlidar type_document_identification_id en db)){
-            self::$alertas['error'][] = 'Numero de indentificacion no es un numero';
-        }*/
+            self::$alertas['error'][] = 'Municipio es obligatorio';
+        }elseif(!municipalities::find('id', $this->municipality_id)){
+            self::$alertas['error'][] = 'Municipio no encontrada en DB';
+        }
         // Validacion merchant_registration
         if (!$this->merchant_registration) {
             self::$alertas['error'][] = "El registro mercantil es obligatorio";
