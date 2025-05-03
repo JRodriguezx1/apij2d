@@ -32,13 +32,13 @@ class InvoiceLine extends ActiveRecord{
         $this->type_item_identification_id = $args['type_item_identification_id'] ?? null;
         $this->reference_price_id = $args['reference_price_id'] ?? null;
 
-        $this->invoiced_quantity  = $args['invoiced_quantity ']??0;
-        $this->line_extension_amount  = $args['line_extension_amount ']??0;
-        $this->free_of_charge_indicator  = $args['free_of_charge_indicator ']??false;
-        $this->description  = $args['description ']??'';
+        $this->invoiced_quantity  = $args['invoiced_quantity']??0;
+        $this->line_extension_amount  = $args['line_extension_amount']??0;
+        $this->free_of_charge_indicator  = $args['free_of_charge_indicator']??false;
+        $this->description  = $args['description']??'';
         $this->code  = $args['code ']??'';
-        $this->price_amount  = $args['price_amount ']?? 0;
-        $this->base_quantity  = $args['base_quantity ']??1;
+        $this->price_amount  = $args['price_amount']?? 0;
+        $this->base_quantity  = $args['base_quantity']??1;
 
         $this->setAllowanceCharges($args['allowance_charges'] ?? []);
         $this->setTaxTotals($args['tax_totals'] ?? []);

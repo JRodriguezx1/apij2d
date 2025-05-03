@@ -100,7 +100,6 @@ class facturacontroller{
     if($_SERVER['REQUEST_METHOD'] === 'POST' ){
       //validacion Form Request
       $validate = new formrequest($datos, []);
-      debuguear($validate->errors());
       
       if(empty($validate->errors())){  //valida entrada de datos
         //obtener compañia
