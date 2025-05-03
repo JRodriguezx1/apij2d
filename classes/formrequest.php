@@ -9,6 +9,7 @@ use Model\languages;
 use Model\municipalities;
 use Model\payment_forms;
 use Model\payment_methods;
+use Model\reference_prices;
 use Model\taxes;
 use Model\type_document_identifications;
 use Model\type_documents;
@@ -171,9 +172,9 @@ class formrequest
                 }
                 //duration_measure
                 if (!($this->data['payment_form']['duration_measure'])??null) {
-                    $errors['payment_form.duration_measure'][] = 'duration_measure es obligatorio si la forma de pago es credito.';
+                     $this::$alertas['error'][] = 'duration_measure es obligatorio si la forma de pago es credito.';
                 } elseif (!is_numeric($this->data['payment_form']['duration_measure']) || strlen($this->data['payment_form']['duration_measure']) > 3) {
-                    $errors['payment_form.duration_measure'][] = 'duration_measure debe ser un número de máximo 3 dígitos.';
+                     $this::$alertas['error'][] = 'duration_measure debe ser un número de máximo 3 dígitos.';
                 }
             }else{
                 if(isset($this->data['payment_form']['payment_due_date']) && $this->data['payment_form']['payment_due_date']=="" && !DateTime::createFromFormat('Y-m-d', $this->data['payment_form']['payment_due_date'])){
@@ -186,21 +187,33 @@ class formrequest
         if (($this->data['allowance_charges']??null) && is_array($this->data['allowance_charges'])){
 
             foreach ($this->data['allowance_charges'] as $index => $item) {
-                
-                if (!isset($item['charge_indicator']) || (isset($item['charge_indicator']) && !is_bool($item['charge_indicator']))) {
-                    $this::$alertas['error'][] = "charge_indicator debe existir y ser booleano.";
-                }
-                //Si charge_indicator es false, entonces discount_id es obligatorio y debe existir en la tabla discounts.
-                if (isset($item['charge_indicator']) && $item['charge_indicator'] === false && (!isset($item['discount_id']) || !discounts::find('id', $item['discount_id']))) {
-                    $this::$alertas['error'][] = "allowance_charges[$index].discount_id requerido si charge_indicator es false y debe existir.";
-                }
-                // allowance_charge_reason es requerido y debe ser string si allowance_charges esta presente
-                if (!$item['allowance_charge_reason'] || !is_string($item['allowance_charge_reason'])) {
-                    $this::$alertas['error'][] = "allowance_charges[$index].allowance_charge_reason requerido como string.";
-                }
+                //'allowance_charges.*.charge_indicator' => 'nullable|required_with:allowance_charges|boolean',
+                //Si allowance_charges está presente charge_indicator debe estar presente en cada elemento, su valor puede ser null o boolean
+                if(!array_key_exists('charge_indicator', $item)){
+                    $this::$alertas['error'][] = "El campo charge_indicator[$index] es requerido cuando allowance_charges está presente.";
+                }elseif($item['charge_indicator'] !== null && !is_bool($item['charge_indicator'])) {
+                    $this::$alertas['error'][] = "El campo charge_indicator[$index] debe ser true, false o null.";
+                }//ok
+                //'allowance_charges.*.discount_id' => 'nullable|required_if:allowance_charges.*.charge_indicator,false|exists:discounts,id',
+                //Si charge_indicator es false, discount_id debe estar presente (pero puede ser null o un ID válido). si //Si charge_indicator es true/null
+                if (isset($item['charge_indicator']) && $item['charge_indicator'] === false) {
+                    if(!array_key_exists('discount_id', $item)){
+                        $this::$alertas['error'][] = "discount_id[$index] es requerido cuando charge_indicator es false.";
+                    }elseif($item['discount_id'] !== null && !discounts::find('id', $item['discount_id'])) {
+                        $this::$alertas['error'][] = "El discount_id[$index] no existe en la base de datos.";  
+                    }
+                }//ok
+                // allowance_charge_reason es requerido y puede ser string o null si allowance_charges esta presente
+                if (!array_key_exists('allowance_charge_reason', $item)) {
+                    $this::$alertas['error'][] = "allowance_charges[$index].allowance_charge_reason es obligatorio puede ser null o texto.";
+                }elseif($item['allowance_charge_reason'] !== null && !is_string($item['allowance_charge_reason'])){
+                    $this::$alertas['error'][] = "allowance_charges[$index].allowance_charge_reason requerido como string";
+                }//ok
+                //
                 if (!$item['amount'] || !is_numeric($item['amount'])) {
                     $this::$alertas['error'][] = "allowance_charges[$index].amount requerido como numérico.";
                 }
+                //
                 if (!$item['base_amount'] || !is_numeric($item['base_amount'])) {
                     $this::$alertas['error'][] = "allowance_charges[$index].base_amount requerido como numérico.";
                 }
@@ -211,18 +224,23 @@ class formrequest
         if (($this->data['tax_totals']??null) && is_array($this->data['tax_totals'])) {
 
             foreach ($this->data['tax_totals'] as $index => $item) {
-                /////***'tax_totals.*.tax_id' => 'nullable|required_with:allowance_charges|exists:taxes,id'
-                /////***si allowance_charges esta presente, tax_id debe existir y estar en la DB
-                if ($this->data['allowance_charges']??null && (!$item['tax_id'] || !taxes::find('id', $item['tax_id']))) {
-                    $this::$alertas['error'][] = "Impuesto en tax_totals[$index].tax_id requerido y debe existir.";
-                }
+                
+                //'tax_totals.*.tax_id' => 'nullable|required_with:allowance_charges|exists:taxes,id', 
+                //Si allowance_charges está, tax_id debe cumplir las reglas (nullable + exists). Si allowance_charges no está, tax_id puede ser cualquier cosa o no existir
+                if($this->data['allowance_charges']??null){
+                    if(!array_key_exists('tax_id', $item)){
+                        $this::$alertas['error'][] = "Impuesto en tax_totals[$index].tax_id requerido o puede ser null.";
+                    }elseif($item['tax_id'] != null && !taxes::find('id', $item['tax_id'])){
+                        $this::$alertas['error'][] = "Impuesto en tax_totals[$index].tax_id debe existir en DB.";
+                    }
+                }//ok
                 /////***'tax_totals.*.percent' => 'nullable|required_unless:tax_totals.*.tax_id,10|numeric',
                 /////***Si tax_id es diferente de 10, entonces percent debe estar presente y ser numérico. y si percent esta presente que sea numerico.
                 if (isset($item['tax_id']) && ($item['tax_id'] != 10) && (!isset($item['percent']) || !is_numeric($item['percent']))){
                     $this::$alertas['error'][] = "tax_totals[$index].percent requerido si tax_id es diferente a 10.";
                 }elseif($item['tax_id'] == 10 && !is_numeric($item['percent'])){
                     $this::$alertas['error'][] = "tax_totals[$index].El campo 'percent' debe ser numérico si está presente.";
-                }
+                }//ok
                 /////***'tax_totals.*.tax_amount' => 'nullable|required_with:allowance_charges|numeric',
                 foreach (['tax_amount','taxable_amount'] as $campo){
                     if($this->data['allowance_charges']??null){
@@ -319,13 +337,52 @@ class formrequest
                     $this::$alertas['error'][] = 'El campo line_extension_amount es requerido y debe ser numerico';
                 }
 
-                if(!($item['free_of_charge_indicator']??null) || !is_bool($item['free_of_charge_indicator'])){
+                if(!isset($item['free_of_charge_indicator']) || !is_bool($item['free_of_charge_indicator'])){
                     $this::$alertas['error'][] = 'El campo free_of_charge_indicator es requerido y debe ser boleano';
                 }
 
+                
                 //.....
+                //'invoice_lines.*.reference_price_id' => 'nullable|required_if:invoice_lines.*.free_of_charge_indicator,true|exists:reference_prices,id',
+                // si free_of_charge_indicator es true, reference_price_id debe validarse y puede ser null u otro valor que exista en DB
+                if(isset($item['free_of_charge_indicator'])&&$item['free_of_charge_indicator']==true){
+                    if(!array_key_exists('reference_price_id', $item)){
+                        $this::$alertas['error'][] = "El campo reference_price_id[$index] no esta definido si free_of_charge_indicator es true.";
+                    }elseif($item['reference_price_id'] != null && !reference_prices::find('id', $item['reference_price_id'])){
+                        $this::$alertas['error'][] = "El campo reference_price_id[$index] no existe en DB cuando free_of_charge_indicator es true.";
+                    }
+                }elseif(isset($item['reference_price_id']) && !reference_prices::find('id', $item['reference_price_id'])){
+                    $this::$alertas['error'][] = "El campo reference_price_id[$index] no existe en DB.";
+                }//ok
 
-                if(!($item['description']??null) || !is_string($item['allowance_charge_reason'])){
+
+
+                ///////Allowance_charges de cada Invoice Lines
+                //'invoice_lines.*.allowance_charges' => 'nullable|array',
+                if(isset($item['allowance_charges']) && $item['allowance_charges']!==null && !is_array($item['allowance_charges'])){
+                    $this::$alertas['error'][] = "El campo allowance_charges de invoice_line.$index no es arreglo";
+                }
+                
+                if (($item['allowance_charges']??null) && is_array($item['allowance_charges'])){
+
+                    foreach($item['allowance_charges'] as $indice => $value) {
+                        //'allowance_charges.*.charge_indicator' => 'nullable|required_with:allowance_charges|boolean',
+                        //Si allowance_charges está presente charge_indicator debe estar presente en cada elemento, su valor puede ser null o boolean
+                        if(!array_key_exists('charge_indicator', $value)){
+                            $this::$alertas['error'][] = "El campo charge_indicator[$indice] es requerido cuando allowance_charges está presente.";
+                        }elseif($value['charge_indicator'] !== null && !is_bool($value['charge_indicator'])) {
+                            $this::$alertas['error'][] = "El campo charge_indicator[$indice] debe ser true, false o null.";
+                        }//ok
+                        
+
+                    }
+                }
+
+
+
+                ///.....
+
+                if(!($item['description']??null) || !is_string($item['description'])){
                     $this::$alertas['error'][] = 'El campo description es requerido y debe ser texto.';
                 }
                 

@@ -102,7 +102,7 @@ class facturacontroller{
       $validate = new formrequest($datos, []);
       debuguear($validate->errors());
       
-      if(empty($validate->errors())){
+      if(empty($validate->errors())){  //valida entrada de datos
         //obtener compañia
         $company = companies::find('id', $_POST['idcompany']);
         //obtener usuario
