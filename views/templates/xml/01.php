@@ -26,8 +26,7 @@
     <cbc:LineCountNumeric><?= count($invoiceLines) ?></cbc:LineCountNumeric>
 
     <?php 
-include __DIR__ . '/invoice_lines.php';
-        /*$node = 'AccountingSupplierParty';
+        $node = 'AccountingSupplierParty';
         $supplier = true;
         include __DIR__ . '/accounting.php'; // AccountingSupplierParty con $supplier = true
         
@@ -36,12 +35,13 @@ include __DIR__ . '/invoice_lines.php';
         $user = $customer;
         include __DIR__ . '/accounting.php'; // AccountingCustomerParty con $user = $customer 
         
-        /*include __DIR__ . '/payment_means.php'; 
+        include __DIR__ . '/payment_means.php'; 
         include __DIR__ . '/payment_terms.php'; 
         include __DIR__ . '/allowance_charges.php'; 
-        include __DIR__ . '/tax_totals.php'; 
-        include __DIR__ . '/legal_monetary_total.php'; */
-        //include __DIR__ . '/invoice_lines.php';
+        include __DIR__ . '/tax_totals.php';
+        $node = 'LegalMonetaryTotal';
+        include __DIR__ . '/legal_monetary_total.php';
+        include __DIR__ . '/invoice_lines.php';
     ?>
 
 </Invoice>

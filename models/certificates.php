@@ -5,7 +5,9 @@ namespace Model;
 class certificates extends ActiveRecord{
     protected static $tabla = 'certificates';
     protected static $columnasDB = ['id', 'company_id', 'name', 'password', 'expiration_date', 'created_at', 'updated_at'];
-    
+    protected $with = ['getpath'];
+    public $path;
+
     public function __construct($args = []){
         $this->id = $args['id']??null;
         $this->company_id = $args['company_id']??'';
@@ -14,6 +16,10 @@ class certificates extends ActiveRecord{
         $this->expiration_date = $args['expiration_date']?? date("Y-m-d H:i:s");
         $this->created_at = $args['created_at']?? date("Y-m-d H:i:s");
         $this->updated_at = $args['updated_at']?? '';
+    }
+
+    public function getpath(){
+        $this->path = __DIR__ ."/../public/build/archivos/{$this->name}";
     }
 
     public function validar_nueva_certificate(){

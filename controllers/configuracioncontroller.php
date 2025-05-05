@@ -30,7 +30,7 @@ class configuracioncontroller{
             ]);
             $user->api_token = hash('sha256', $_POST['numero_documento']);
             
-            $company = new companies([
+            $company = new companies([  //data obtenida de latam.php y configurationController.php
                 //'user_id' => $user->id,
                 "identification_number" => $_POST['numero_documento'],
                 "dv" => $dv,
@@ -198,6 +198,7 @@ class configuracioncontroller{
     }
 
 
+    // este metodo se llama para configurar el entorno el cual en la tabla software switchea la URL
     public static function environment(Router $router, $idcompany, $data):void {
         $alertas = [];
         isadmin();

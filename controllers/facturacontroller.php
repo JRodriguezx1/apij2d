@@ -2,6 +2,11 @@
 
 namespace Controllers;
 
+require __DIR__ . '/../classes/UBL21dian/src/Traits/DIANTrait.php';
+require __DIR__ . '/../classes/UBL21dian/src/Sign.php';
+require __DIR__ . '/../classes/UBL21dian/src/XAdES/SignInvoice.php';
+use Stenfrank\UBL21dian\XAdES\SignInvoice;
+
 use Classes\Email;
 use Classes\formrequest;
 use Model\AllowanceCharge;
@@ -30,7 +35,7 @@ class facturacontroller{
     isadmin();
     $alertas = [];
 
-    ////////////////////datos de prueba ///////////////////
+    ////////////////////datos factura de prueba ///////////////////
     $facturaNumber = '9944' . random_int(10000, 99000);
     $fechaActual = date("Y-m-d");
     $datos = [
@@ -146,8 +151,10 @@ class facturacontroller{
         
         //crear el xml
         $invoice = createXML(compact('user', 'company', 'customer', 'taxTotals', 'resolution', 'paymentForm', 'typeDocument', 'invoiceLines', 'allowanceCharges', 'legalMonetaryTotals', 'date', 'time'));
-        debuguear($invoice);
+        //debuguear($company->certificate->password);
         //firmar XML digitalmente
+        $signIN = new SignInvoice($company->certificate->path, $company->certificate->password);
+        $signIN->sign($invoice);
         //preparar y enviar a Dian pruebas
         //respuesta
 
