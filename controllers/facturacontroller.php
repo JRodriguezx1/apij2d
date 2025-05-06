@@ -5,6 +5,10 @@ namespace Controllers;
 require __DIR__ . '/../classes/UBL21dian/src/Traits/DIANTrait.php';
 require __DIR__ . '/../classes/UBL21dian/src/Sign.php';
 require __DIR__ . '/../classes/UBL21dian/src/XAdES/SignInvoice.php';
+require __DIR__ . '/../classes/UBL21dian/src/BinarySecurityToken/SOAP.php';
+require __DIR__ . '/../classes/UBL21dian/src/Templates/CreateTemplate.php';
+require __DIR__ . '/../classes/UBL21dian/src/Templates/Template.php';
+require __DIR__ . '/../classes/UBL21dian/src/Templates/SOAP/SendTestSetAsync.php';
 use Stenfrank\UBL21dian\XAdES\SignInvoice;
 
 use Classes\Email;
@@ -155,6 +159,7 @@ class facturacontroller{
         //firmar XML digitalmente
         $signIN = new SignInvoice($company->certificate->path, $company->certificate->password);
         $signIN->sign($invoice);
+        
         //preparar y enviar a Dian pruebas
         //respuesta
 
