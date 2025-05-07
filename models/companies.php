@@ -4,7 +4,7 @@ namespace Model;
 
 class companies extends ActiveRecord {
     protected static $tabla = 'companies';
-    protected static $columnasDB = ['id', 'user_id', 'identification_number', 'dv', 'language_id', 'tax_id', 'type_environment_id', 'type_operation_id', 'type_document_identification_id', 'country_id', 'type_currency_id', 'type_organization_id', 'type_regime_id', 'type_liability_id', 'municipality_id', 'merchant_registration', 'address', 'phone', 'created_at', 'updated_at'];
+    protected static $columnasDB = ['id', 'user_id', 'identification_number', 'dv', 'language_id', 'tax_id', 'type_environment_id', 'payroll_type_environment_id', 'eqdocs_type_environment_id', 'type_operation_id', 'type_document_identification_id', 'country_id', 'type_currency_id', 'type_organization_id', 'type_regime_id', 'type_liability_id', 'municipality_id', 'merchant_registration', 'address', 'phone', 'password', 'newpassword', 'type_plan_id', 'type_plan2_id', 'type_plan3_id', 'type_plan4_id', 'absolut_plan_documents', 'start_plan_date', 'start_plan_date2', 'start_plan_date3', 'start_plan_date4', 'absolut_start_plan_date', 'state', 'allow_seller_login', 'created_at', 'updated_at'];
     
     protected $with = ['software', 'certificate', 'resolutions', 'languages', 'taxes', 'type_environments', 'type_operations', 'type_document_identifications', 'country', 'type_currencies', 'type_organizations', 'type_regimes', 'type_liabilities', 'municipalities'];
 
@@ -17,6 +17,8 @@ class companies extends ActiveRecord {
         $this->language_id = $args['language_id'] ?? 79;
         $this->tax_id = $args['tax_id'] ?? 1;
         $this->type_environment_id = $args['type_environment_id'] ?? 2; //2 = modo pruebas
+        $this->payroll_type_environment_id = $args['payroll_type_environment_id'] ?? '';
+        $this->eqdocs_type_environment_id = $args['eqdocs_type_environment_id'] ?? '';
         $this->type_operation_id = $args['type_operation_id'] ?? 10;
         $this->type_document_identification_id = $args['type_document_identification_id'] ?? '';
         $this->country_id = $args['country_id'] ?? 46;
@@ -28,6 +30,20 @@ class companies extends ActiveRecord {
         $this->merchant_registration = $args['merchant_registration'] ?? '';
         $this->address = $args['address'] ?? '';
         $this->phone = $args['phone'] ?? '';
+        $this->password = $args['password'] ?? '';
+        $this->newpassword = $args['newpassword'] ?? '';
+        $this->type_plan_id = $args['type_plan_id'] ?? '';
+        $this->type_plan2_id = $args['type_plan2_id'] ?? '';
+        $this->type_plan3_id = $args['type_plan3_id'] ?? '';
+        $this->type_plan4_id = $args['type_plan4_id'] ?? '';
+        $this->absolut_plan_documents = $args['absolut_plan_documents'] ?? '';
+        $this->start_plan_date = $args['start_plan_date'] ?? '';
+        $this->start_plan_date2 = $args['start_plan_date2'] ?? '';
+        $this->start_plan_date3 = $args['start_plan_date3'] ?? '';
+        $this->start_plan_date4 = $args['start_plan_date4'] ?? '';
+        $this->absolut_start_plan_date = $args['absolut_start_plan_date'] ?? '';
+        $this->state = $args['state'] ?? '';
+        $this->allow_seller_login = $args['allow_seller_login']??'';
         $this->created_at = $args['created_at'] ?? date("Y-m-d H:i:s");
         $this->updated_at = $args['updated_at'] ?? '';
     }
