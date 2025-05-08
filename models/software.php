@@ -4,14 +4,20 @@ namespace Model;
 
 class software extends ActiveRecord{
     protected static $tabla = 'software';
-    protected static $columnasDB = ['id', 'company_id', 'identifier', 'pin', 'url', 'created_at', 'updated_at'];
+    protected static $columnasDB = ['id', 'company_id', 'identifier', 'pin', 'identifier_payroll', 'pin_payroll', 'identifier_eqdocs', 'pin_eqdocs', 'url', 'url_payroll', 'url_eqdocs', 'created_at', 'updated_at'];
     
     public function __construct($args = []){
         $this->id = $args['id']??null;
         $this->company_id = $args['company_id']??'';
         $this->identifier = $args['identifier']??'';
         $this->pin = $args['pin']??12345;
+        $this->identifier_payroll = $args['identifier_payroll']??'';
+        $this->pin_payroll = $args['pin_payroll']??'';
+        $this->identifier_eqdocs = $args['identifier_eqdocs']??'';
+        $this->pin_eqdocs = $args['pin_eqdocs']??'';
         $this->url = $args['url']??'';
+        $this->url_payroll = $args['url_payroll']??'';
+        $this->url_eqdocs = $args['url_eqdocs']??'';
         $this->created_at = $args['created_at']?? date("Y-m-d H:i:s");
         $this->updated_at = $args['updated_at']?? '';
     }

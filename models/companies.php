@@ -17,8 +17,8 @@ class companies extends ActiveRecord {
         $this->language_id = $args['language_id'] ?? 79;
         $this->tax_id = $args['tax_id'] ?? 1;
         $this->type_environment_id = $args['type_environment_id'] ?? 2; //2 = modo pruebas
-        $this->payroll_type_environment_id = $args['payroll_type_environment_id'] ?? '';
-        $this->eqdocs_type_environment_id = $args['eqdocs_type_environment_id'] ?? '';
+        $this->payroll_type_environment_id = $args['payroll_type_environment_id'] ?? 2;
+        $this->eqdocs_type_environment_id = $args['eqdocs_type_environment_id'] ?? 2;
         $this->type_operation_id = $args['type_operation_id'] ?? 10;
         $this->type_document_identification_id = $args['type_document_identification_id'] ?? '';
         $this->country_id = $args['country_id'] ?? 46;
@@ -32,18 +32,18 @@ class companies extends ActiveRecord {
         $this->phone = $args['phone'] ?? '';
         $this->password = $args['password'] ?? '';
         $this->newpassword = $args['newpassword'] ?? '';
-        $this->type_plan_id = $args['type_plan_id'] ?? '';
-        $this->type_plan2_id = $args['type_plan2_id'] ?? '';
-        $this->type_plan3_id = $args['type_plan3_id'] ?? '';
-        $this->type_plan4_id = $args['type_plan4_id'] ?? '';
+        $this->type_plan_id = $args['type_plan_id'] ?? 0;
+        $this->type_plan2_id = $args['type_plan2_id'] ?? 0;
+        $this->type_plan3_id = $args['type_plan3_id'] ?? 0;
+        $this->type_plan4_id = $args['type_plan4_id'] ?? 0;
         $this->absolut_plan_documents = $args['absolut_plan_documents'] ?? '';
         $this->start_plan_date = $args['start_plan_date'] ?? '';
         $this->start_plan_date2 = $args['start_plan_date2'] ?? '';
         $this->start_plan_date3 = $args['start_plan_date3'] ?? '';
         $this->start_plan_date4 = $args['start_plan_date4'] ?? '';
         $this->absolut_start_plan_date = $args['absolut_start_plan_date'] ?? '';
-        $this->state = $args['state'] ?? '';
-        $this->allow_seller_login = $args['allow_seller_login']??'';
+        $this->state = $args['state'] ?? 1;
+        $this->allow_seller_login = $args['allow_seller_login']??1;
         $this->created_at = $args['created_at'] ?? date("Y-m-d H:i:s");
         $this->updated_at = $args['updated_at'] ?? '';
     }
@@ -127,6 +127,16 @@ class companies extends ActiveRecord {
             self::$alertas['error'][] = 'Entrono es obligatorio';
         }elseif(!type_environments::find('id', $this->type_environment_id)){
             self::$alertas['error'][] = 'tipo de entorno no encontrada en DB';
+        }
+        // Validacion payroll_type_environment_id - Opcional
+        if(isset($this->payroll_type_environment_id) && $this->payroll_type_environment_id !== null){
+            if(!type_environments::find('id', $this->type_environment_id))
+                self::$alertas['error'][] = 'payroll_type_environment_id no encontrada en DB';
+        }
+        // Validacion eqdocs_type_environment_id - Opcional
+        if(isset($this->eqdocs_type_environment_id) && $this->eqdocs_type_environment_id!==null){
+            if(!type_environments::find('id', $this->eqdocs_type_environment_id))
+                self::$alertas['error'][] = 'eqdocs_type_environment_id no encontrada en DB';
         }
         // Validacion type_operation_id
         if(!$this->type_operation_id){

@@ -112,7 +112,13 @@ class configuracioncontroller{
             'company_id'=>$idcompany,
             'identifier'=>$arrayPOS['idsoftware'],
             'pin'=>$arrayPOS['pinsoftware'],
-            'url'=>$arrayPOS['url']?? 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc'
+            'url'=>$arrayPOS['url']?? 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc',
+            'url_payroll'=>$arrayPOS['url_payroll']?? 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc',
+            'identifier_payroll'=>$arrayPOS['identifier_payroll']?? ' ',
+            'pin_payroll'=>$arrayPOS['pin_payroll']?? ' ',
+            'url_eqdocs'=>$arrayPOS['url_eqdocs']?? 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc',
+            'identifier_eqdocs'=>$arrayPOS['identifier_eqdocs']?? ' ',
+            'pin_eqdocs'=>$arrayPOS['pin_eqdocs']?? ' '
         ]);
         $r1 = $newSoftware->crear_guardar();
     }
