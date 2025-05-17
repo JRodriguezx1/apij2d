@@ -5,11 +5,16 @@ namespace Controllers;
 require __DIR__ . '/../classes/UBL21dian/src/Traits/DIANTrait.php';
 require __DIR__ . '/../classes/UBL21dian/src/Sign.php';
 require __DIR__ . '/../classes/UBL21dian/src/XAdES/SignInvoice.php';
-require __DIR__ . '/../classes/UBL21dian/src/BinarySecurityToken/SOAP.php';
+
+require __DIR__ . '/../classes/UBL21dian/src/Client.php'; //llamado por Template.php
+require __DIR__ . '/../classes/UBL21dian/src/BinarySecurityToken/SOAP.php'; //llamado por Template.php
 require __DIR__ . '/../classes/UBL21dian/src/Templates/CreateTemplate.php';
 require __DIR__ . '/../classes/UBL21dian/src/Templates/Template.php';
 require __DIR__ . '/../classes/UBL21dian/src/Templates/SOAP/SendTestSetAsync.php';
+
 use Stenfrank\UBL21dian\XAdES\SignInvoice;
+//use Stenfrank\UBL21dian\Templates\SOAP\SendBillAsync;
+use Stenfrank\UBL21dian\Templates\SOAP\SendTestSetAsync;
 
 use Classes\Email;
 use Classes\formrequest;
@@ -122,7 +127,7 @@ class facturacontroller{
         $customer->company = new companies($datos['customer']);
         //obtener resolucion y numeracion
         $resolution = resolutions::uniquewhereArray(['company_id'=>$_POST['idcompany'], 'type_document_id'=>$datos['type_document_id'], 'resolution'=>$datos['resolution_number'], 'prefix'=>$datos['prefix']]);
-        $resolution->number = $datos['number'];
+        $resolution->number = $datos['number'];  //numero de factura/consecutivo
         //fecha y hora
         $date = $fechaActual;
         $time = date("H:i:s");
@@ -157,10 +162,17 @@ class facturacontroller{
         $invoice = createXML(compact('user', 'company', 'customer', 'taxTotals', 'resolution', 'paymentForm', 'typeDocument', 'invoiceLines', 'allowanceCharges', 'legalMonetaryTotals', 'date', 'time'));
         //debuguear($company->certificate->password);
         //firmar XML digitalmente
-        $signIN = new SignInvoice($company->certificate->path, $company->certificate->password);
-        $signIN->sign($invoice);
-        
+        $signIN = new SignInvoice($company->certificate->path, $company->certificate->password); //la clase SignInvoice extiende de Sign, cuando se instancia la clase SignInvoice, el constructor de SignInvoice llama al al constructor de su padre Sign.
+        $signIN->softwareID = $company->software->identifier;
+        $signIN->pin = $company->software->pin;
+        $signIN->technicalKey = $resolution->technical_key;
+        //$z = $signIN->sign($invoice);  //este metodo llama a loadXML(); de class SignInvoice
+        //debuguear($z->xml);
+        //echo htmlentities($z->xml);
         //preparar y enviar a Dian pruebas
+        $sendTestSetAsync = new SendTestSetAsync($company->certificate->path, $company->certificate->password);
+        $sendTestSetAsync->To = $company->software->url;
+        $sendTestSetAsync->fileName = "{$resolution->prefix}{$resolution->number}.xml";
         //respuesta
 
       }
