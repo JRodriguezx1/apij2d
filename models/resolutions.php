@@ -5,7 +5,8 @@ namespace Model;
 class resolutions extends ActiveRecord{
     protected static $tabla = 'resolutions';
     protected static $columnasDB = ['id', 'company_id', 'type_document_id', 'prefix', 'resolution', 'resolution_date', 'technical_key', 'from', 'to', 'date_from', 'date_to', 'created_at', 'updated_at'];
-    
+    protected $with = ['type_documents'];
+
     public function __construct($args = []){
         $this->id = $args['id']??null;
         $this->company_id = $args['company_id']??'';
@@ -22,7 +23,10 @@ class resolutions extends ActiveRecord{
         $this->updated_at = $args['updated_at']?? '';
     }
 
-
+// CARGA AUTOMATICA DE RELACION UNO A UNO, ID DE COMPANIES SE PROPAGA A OTRAS TABLAS
+    public function type_documents(){
+        return type_documents::find('id', $this->type_document_id);
+    }
     
     public function validar_nueva_resolution(){
         // Validacion identifier

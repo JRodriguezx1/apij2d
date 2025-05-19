@@ -598,7 +598,13 @@ class ActiveRecord {
             }
         }
         $resultado = self::consultar_Sql($sql);
-        return array_shift($resultado);
+        $instancia = array_shift($resultado);
+        //CARGA AUNTOMATICA DE RELACION UNO A UNO
+        if($instancia && property_exists($instancia, "with")){
+            foreach($instancia->with as $metodo)
+                if(method_exists($instancia, $metodo))$instancia->$metodo = $instancia->$metodo();
+        }
+        return $instancia;
     }
 
 

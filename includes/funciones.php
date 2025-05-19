@@ -2,6 +2,10 @@
 
 //use DOMDocument;
 
+use Model\companies;
+use Model\resolutions;
+use Model\type_documents;
+
 function debuguear($variable) : string {
     echo "<pre>";
     var_dump($variable);
@@ -103,36 +107,44 @@ function renderTemplate(string $templatePath, array $data): string
 
 
 /////////////// zib54 /////////////////
-function zipBase64(array $company, array $resolution, $signXml){
+function zipBase64(companies $company, resolutions $resolution, $signXml){
     
     $xmlDir = __DIR__ . "/../public/build/archivos/xml/{$resolution->company_id}";
     $zipDir = __DIR__ . "/../public/build/archivos/zip/{$resolution->company_id}";
 
-    if (!is_dir($xmlDir))
-            mkdir($xmlDir, 0777, true);
+    if(!is_dir($xmlDir))
+        mkdir($xmlDir, 0777, true);
 
-        if (!is_dir($zipDir))
-            mkdir($zipDir, 0777, true);
+    if(!is_dir($zipDir))
+        mkdir($zipDir, 0777, true);
     
     $nameXML = getFileName($company, $resolution);
     $nameZip = getFileName($company, $resolution, 6, '.zip');
+
+    $xmlPath = "{$xmlDir}/{$nameXML}";  // => build/archivos/xml/15/01154545500.xml
+    file_put_contents($xmlPath, $signXml);
+
+    $pathZIP = "{$zipDir}/{$nameZip}";  // => build/archivos/zip/15/01154545500.zip
+
+    $zip = new ZipArchive();
+    if($zip->open($pathZIP, ZipArchive::CREATE) === TRUE) {
+            $zip->addFile($xmlPath, $nameXML);
+            $zip->close();
+    }else{
+        debuguear(0);
+    }
+    //return $ZipBase64Bytes = base64_encode(file_get_contents($pathZIP));
 }
 
 function getFileName(array $company, array $resolution, $typeDocumentID = null, $extension = '.xml'){
     $date = new DateTime();
-    $prefix = $typeDocumentID === null
-        ? $resolution['type_document']['prefix']
-        : $this->getPrefixByTypeDocumentId($typeDocumentID); // Simulación
+    $prefix = $typeDocumentID===null?$resolution->type_documents->prefix:type_documents::find('id', $typeDocumentID)->prefix; // Simulación
 
     $year = $date->format('y');
     $nextConsecutive = $this->getNextConsecutive($company['id'], $typeDocumentID ?? $resolution['type_document_id'], $year);
 
-    $name = "{$prefix}"
-            . $this->stuffedString($company['identification_number'])
-            . $this->ppp
-            . $year
-            . $this->stuffedString($nextConsecutive, 8)
-            . $extension;
+    //$name = "{$prefix}{$NIT}{$ppp}{$year}{$consecutive}.xml";
+    $name = "{$prefix}".stuffedString($company->identification_number).$this->ppp.$year.stuffedString($nextConsecutive??1, 8).$extension;
 
     $this->incrementConsecutive($company['id'], $typeDocumentID ?? $resolution['type_document_id'], $year);
     return $name;

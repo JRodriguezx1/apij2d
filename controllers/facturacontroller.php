@@ -173,7 +173,7 @@ class facturacontroller{
         $sendTestSetAsync = new SendTestSetAsync($company->certificate->path, $company->certificate->password);
         $sendTestSetAsync->To = $company->software->url; //to esta en Template.php
         $sendTestSetAsync->fileName = "{$resolution->prefix}{$resolution->number}.xml";
-        
+        $sendTestSetAsync->contentFile = zipBase64($company, $resolution, $signIN->sign($invoice));
         //respuesta
 
       }
