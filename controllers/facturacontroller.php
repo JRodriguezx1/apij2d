@@ -171,8 +171,9 @@ class facturacontroller{
         //echo htmlentities($z->xml);
         //preparar y enviar a Dian pruebas
         $sendTestSetAsync = new SendTestSetAsync($company->certificate->path, $company->certificate->password);
-        $sendTestSetAsync->To = $company->software->url;
+        $sendTestSetAsync->To = $company->software->url; //to esta en Template.php
         $sendTestSetAsync->fileName = "{$resolution->prefix}{$resolution->number}.xml";
+        
         //respuesta
 
       }

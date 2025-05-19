@@ -100,3 +100,44 @@ function renderTemplate(string $templatePath, array $data): string
     include $templatePath;
     return ob_get_clean();
 }
+
+
+/////////////// zib54 /////////////////
+function zipBase64(array $company, array $resolution, $signXml){
+    
+    $xmlDir = __DIR__ . "/../public/build/archivos/xml/{$resolution->company_id}";
+    $zipDir = __DIR__ . "/../public/build/archivos/zip/{$resolution->company_id}";
+
+    if (!is_dir($xmlDir))
+            mkdir($xmlDir, 0777, true);
+
+        if (!is_dir($zipDir))
+            mkdir($zipDir, 0777, true);
+    
+    $nameXML = getFileName($company, $resolution);
+    $nameZip = getFileName($company, $resolution, 6, '.zip');
+}
+
+function getFileName(array $company, array $resolution, $typeDocumentID = null, $extension = '.xml'){
+    $date = new DateTime();
+    $prefix = $typeDocumentID === null
+        ? $resolution['type_document']['prefix']
+        : $this->getPrefixByTypeDocumentId($typeDocumentID); // Simulación
+
+    $year = $date->format('y');
+    $nextConsecutive = $this->getNextConsecutive($company['id'], $typeDocumentID ?? $resolution['type_document_id'], $year);
+
+    $name = "{$prefix}"
+            . $this->stuffedString($company['identification_number'])
+            . $this->ppp
+            . $year
+            . $this->stuffedString($nextConsecutive, 8)
+            . $extension;
+
+    $this->incrementConsecutive($company['id'], $typeDocumentID ?? $resolution['type_document_id'], $year);
+    return $name;
+}
+
+function stuffedString($string, $length = 10, $padString = '0', $padType = STR_PAD_LEFT){
+    return str_pad($string, $length, $padString, $padType);
+}
