@@ -18,8 +18,8 @@
         </div>
 
         <div class="mb-5 col-span-3">
-          <label for="set" class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">Set de pruebas</label>
-          <input type="text" id="set" name="set" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+          <label for="testSetId" class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">Set de pruebas</label>
+          <input type="text" id="testSetId" name="testSetId" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
         </div>
 
         <div class="mb-5 col-span-3 text-right">

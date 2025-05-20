@@ -136,17 +136,19 @@ function zipBase64(companies $company, resolutions $resolution, $signXml){
     //return $ZipBase64Bytes = base64_encode(file_get_contents($pathZIP));
 }
 
-function getFileName(array $company, array $resolution, $typeDocumentID = null, $extension = '.xml'){
+function getFileName($company, $resolution, $typeDocumentID = null, $extension = '.xml'){
     $date = new DateTime();
     $prefix = $typeDocumentID===null?$resolution->type_documents->prefix:type_documents::find('id', $typeDocumentID)->prefix; // Simulación
 
     $year = $date->format('y');
-    $nextConsecutive = $this->getNextConsecutive($company['id'], $typeDocumentID ?? $resolution['type_document_id'], $year);
+    //$nextConsecutive = $this->getNextConsecutive($company['id'], $typeDocumentID ?? $resolution['type_document_id'], $year);
 
-    //$name = "{$prefix}{$NIT}{$ppp}{$year}{$consecutive}.xml";
-    $name = "{$prefix}".stuffedString($company->identification_number).$this->ppp.$year.stuffedString($nextConsecutive??1, 8).$extension;
+    // Simulación de la función firstOrCreate e increment de Laravel
 
-    $this->incrementConsecutive($company['id'], $typeDocumentID ?? $resolution['type_document_id'], $year);
+    // $name = "{$prefix}{$NIT}{$ppp}{$year}{$consecutive}.xml";
+    // ESTRUCTURA DEL NOMBRE //  
+    // {Prefijo}{NIT rellenado}{PPP}{Año}{Consecutivo rellenado}.{extensión}
+    $name = "{$prefix}".stuffedString($company->identification_number).$this->ppp??"000".$year.stuffedString($nextConsecutive??1, 8).$extension;
     return $name;
 }
 
