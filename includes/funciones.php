@@ -122,7 +122,7 @@ function zipBase64(companies $company, resolutions $resolution, $signXml){
     $nameZip = getFileName($company, $resolution, 6, '.zip');
 
     $xmlPath = "{$xmlDir}/{$nameXML}";  // => build/archivos/xml/15/01154545500.xml
-    file_put_contents($xmlPath, $signXml);
+    file_put_contents($xmlPath, $signXml->xml);
 
     $pathZIP = "{$zipDir}/{$nameZip}";  // => build/archivos/zip/15/01154545500.zip
 
@@ -148,7 +148,8 @@ function getFileName($company, $resolution, $typeDocumentID = null, $extension =
     // $name = "{$prefix}{$NIT}{$ppp}{$year}{$consecutive}.xml";
     // ESTRUCTURA DEL NOMBRE //  
     // {Prefijo}{NIT rellenado}{PPP}{Año}{Consecutivo rellenado}.{extensión}
-    $name = "{$prefix}".stuffedString($company->identification_number).$this->ppp??"000".$year.stuffedString($nextConsecutive??1, 8).$extension;
+    $ppp = "000";
+    $name = "{$prefix}".stuffedString($company->identification_number).$ppp??"000".$year.stuffedString($nextConsecutive??1, 8).$extension;
     return $name;
 }
 
