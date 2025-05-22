@@ -133,7 +133,7 @@ function zipBase64(companies $company, resolutions $resolution, $signXml){
     }else{
         debuguear(0);
     }
-    //return $ZipBase64Bytes = base64_encode(file_get_contents($pathZIP));
+    return $ZipBase64Bytes = base64_encode(file_get_contents($pathZIP));
 }
 
 function getFileName($company, $resolution, $typeDocumentID = null, $extension = '.xml'){
@@ -149,7 +149,7 @@ function getFileName($company, $resolution, $typeDocumentID = null, $extension =
     // ESTRUCTURA DEL NOMBRE //  
     // {Prefijo}{NIT rellenado}{PPP}{Año}{Consecutivo rellenado}.{extensión}
     $ppp = "000";
-    $name = "{$prefix}".stuffedString($company->identification_number).$ppp??"000".$year.stuffedString($nextConsecutive??1, 8).$extension;
+    $name = "{$prefix}".stuffedString($company->identification_number).$ppp.$year.stuffedString($nextConsecutive??1, 8).$extension;
     return $name;
 }
 
