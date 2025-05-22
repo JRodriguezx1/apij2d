@@ -176,7 +176,7 @@ class facturacontroller{
         $sendTestSetAsync->contentFile = zipBase64($company, $resolution, $signIN->sign($invoice));
         $sendTestSetAsync->testSetId = $_POST['testSetId'];
         //respuesta
-        debuguear($sendTestSetAsync->signToSend()->getResponseToObject());
+        $ResponseDian = $sendTestSetAsync->signToSend()->getResponseToObject();
         //$sendTestSetAsync->signToSend()->getResponseToObject();
       }
     } //fin REQUEST_METHOD
